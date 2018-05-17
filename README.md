@@ -8,17 +8,46 @@ json数据查找+格式化
  * @param    {[type]}   config               [description]
  * @return   {[type]}                        [description]
  */
-formatChildren: function (config) {
-    return this._formatChildren(config, []);
-}
+var formatChildrenResult = _$_.formatChildren({
+	id: 'id',
+	parentId: 'parentId',
+	data: [{
+        id: '11',
+        parentId: '1',
+        value: '北京'
+	}, {
+        id: '12',
+        parentId: '1',
+        value: '上海'
+	}]
+});
 
-insertBefore: function (config) {
-   
-},
 
-insertAfter: function (config) {
-   
-}
+/**
+ * 执行数据插入
+ * @Author   dingyang
+ * @DateTime 2018-05-17
+ * @param    {[type]}   config               相关配置，见demo
+ * @return   {[type]}                        [description]
+ */
+var insertBefore = _$_.insertBefore({
+	key: 'a',
+	value: 2,
+    target: {
+        key: 'test',
+        value: 'sss'
+    },
+	data: [1,3,{a:2},{a:2}]
+});
+var insertAfter = _$_.insertAfter({
+    key: 'a',
+    value: 2,
+    target: {
+        key: 'test',
+        value: 'sss'
+    },
+    data: [1,3,{a:2},{a:2}]
+}); 
 
 /**
  * 从json|array数据中查找符合条件[nodeId===nodeValue]的节点
@@ -30,7 +59,15 @@ insertAfter: function (config) {
  * @param[必选]    {object}          data              查找数据源，可以是json,也可以是array
  * @return        {[type]}                        [description]
  */
-queryNodes: function (config) {}
+var qryResults = _$_.queryNodes({
+	key: 'a',
+	value: 2,
+    data: {
+		a: 2,
+		b: {a: 2}
+	}
+});
+
 
 /**
  * 根据jsonArray查找某一节点的父级关系
@@ -42,6 +79,62 @@ queryNodes: function (config) {}
  * @param[必选]    {object}          data              查找数据源，可以是json,也可以是array
  * @return   {[type]}                        [description]
  */
-queryParents: function (config) {}
+var qryResults2 = _$_.queryParents({
+	key: 'id',
+	value: 3,
+	data: 
+	   [{
+		    id: 1,
+		    children: [{
+		    	id: 2
+		    }, {
+		    	id: 3
+		    }]
+		}, {
+	        id: 11,
+	        children: [{
+	    	    id: 22
+	        }, {
+	    	    id: 33,
+	    	    children: [{
+	    		    id: 66
+	    	    }]
+	        }]
+	    }]
+});
 
-querySiblings()
+/**
+ * 兄弟元素查找
+ * @Author   dingyang
+ * @DateTime 2018-05-17
+ * @param    {[type]}   config               [description]
+ * @return   {[type]}                        [description]
+ */
+var qrySiblings = _$_.querySiblings({
+	key: 'id',
+	value: 2,
+	data: 
+	   [{
+		    id: 1,
+		    children: [{
+		    	id: 2
+		    }, {
+		    	id: 3,
+		    	name: 'test'
+		    }, {
+		    	id: 4,
+		    	name: 'test2'
+		    }]
+		}, {
+	        id: 11,
+	        children: [{
+	    	    id: 2,
+	    	    name: 'sss'
+	        }, {
+	    	    id: 33,
+	    	    children: [{
+	    		    id: 66
+	    	    }]
+	        }]
+	    }]
+});

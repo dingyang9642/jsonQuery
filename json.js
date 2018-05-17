@@ -131,7 +131,13 @@ window._$_ = {
         return arguments.callee.call(this, config, results);
     },
 
-    
+    /**
+     * 执行数据插入
+     * @Author   dingyang
+     * @DateTime 2018-05-17
+     * @param    {[type]}   config               相关配置，见demo
+     * @return   {[type]}                        [description]
+     */
     insertBefore: function (config) {
         return this._insertBeforeOrAfter(config, 'before');
     },
@@ -323,6 +329,13 @@ window._$_ = {
     firstChild: function () {
         
     },
+    /**
+     * 兄弟元素查找
+     * @Author   dingyang
+     * @DateTime 2018-05-17
+     * @param    {[type]}   config               [description]
+     * @return   {[type]}                        [description]
+     */
     querySiblings: function (config) {
         this.tmpSiblings = [];
         this._querySiblings(config);
