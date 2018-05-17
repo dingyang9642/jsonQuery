@@ -1,6 +1,8 @@
 # jsonQuery
 json数据查找+格式化
 
+###1、children数据格式化
+```
 /**
  * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
  * @Author   dingyang
@@ -21,8 +23,10 @@ var formatChildrenResult = _$_.formatChildren({
         value: '上海'
 	}]
 });
+```
 
-
+###2、数据插入
+```
 /**
  * 执行数据插入
  * @Author   dingyang
@@ -47,8 +51,10 @@ var insertAfter = _$_.insertAfter({
         value: 'sss'
     },
     data: [1,3,{a:2},{a:2}]
-}); 
-
+});
+``` 
+###3、查询节点
+```
 /**
  * 从json|array数据中查找符合条件[nodeId===nodeValue]的节点
  * @Author   dingyang
@@ -67,8 +73,9 @@ var qryResults = _$_.queryNodes({
 		b: {a: 2}
 	}
 });
-
-
+```
+###4、查询父节点
+```
 /**
  * 根据jsonArray查找某一节点的父级关系
  * @Author   dingyang
@@ -102,7 +109,9 @@ var qryResults2 = _$_.queryParents({
 	        }]
 	    }]
 });
-
+```
+###5、查询兄弟节点
+```
 /**
  * 兄弟元素查找
  * @Author   dingyang
@@ -138,3 +147,4 @@ var qrySiblings = _$_.querySiblings({
 	        }]
 	    }]
 });
+```
