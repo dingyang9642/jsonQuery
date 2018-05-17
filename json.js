@@ -218,9 +218,58 @@ window._$_ = {
         return results;
     },
 
+    /**
+     * 元素节点删除
+     * @Author   dingyang
+     * @DateTime 2018-05-17
+     * @param    {[type]}   config               [description]
+     * @return   {[type]}                        [description]
+     */
+    delete: function (config) {
+        var json_arr_data = config.data,
+                nodeValue = config.value,
+                  nodeKey = config.key;
+        var isArrayData = this.toolUtil.isArray(json_arr_data),
+             isJsonData = this.toolUtil.isJson(json_arr_data),
+                results = [];
+        // 首先，进行异常逻辑处理(如果不是json也不是array)
+        if (!isJsonData && !isArrayData) {
+            return json_arr_data;
+        }
+        var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
+        var results = isArrayData ? [] : {};
+        for (var key in json_arr_data) {
+            var keyValue = json_arr_data[key];
+            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+                var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
+            }
+            else if (nodeKey || (nodeKey === 0)) {
+                var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
+            }
+            else if (nodeValue) {
+                var compare = this.toolUtil.compare(keyValue, nodeValue);
+            }
+            if (compare) continue;
+            if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
+                config.data = keyValue;
+                if (isArrayData) {
+                    results.push(arguments.callee.call(this, config));
+                } else {
+                    results[key] = arguments.callee.call(this, config);
+                }
+            } else {
+                if (isArrayData) {
+                    results.push(keyValue);
+                } else {
+                    results[key] = keyValue;
+                }
+            }
+        }
+        return results;
+    },
 
-	/**
-	 * 从json|array数据中查找符合条件[nodeId===nodeValue]的节点
+	  /**
+	   * 从json|array数据中查找符合条件[nodeId===nodeValue]的节点
      * @Author   dingyang
      * @DateTime 2018-04-24
      * @param[必选]    {json}            config            查找配置项

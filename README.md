@@ -148,3 +148,18 @@ var qrySiblings = _$_.querySiblings({
 	    }]
 });
 ```
+###6、节点删除
+```
+/**
+ * 元素节点删除
+ * @Author   dingyang
+ * @DateTime 2018-05-17
+ * @param    {[type]}   config               [description]
+ * @return   {[type]}                        [description]
+ */
+var deleteNodes = _$_.delete({
+    key: 'a',
+    value: 2,
+    data: [1,3,{a:2},{a:2}]
+});
+```
