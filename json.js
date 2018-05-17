@@ -66,6 +66,38 @@ window._$_tool_ = {
         }
     },
     /**
+     * 
+     * @Author   dingyang
+     * @DateTime 2018-05-17
+     * @return   {Boolean}  [description]
+     */
+    isContain: function (config) {
+        var json_arr_data = config.data,
+                nodeValue = config.value,
+                  nodeKey = config.key;
+        var isArrayData = this.isArray(json_arr_data),
+             isJsonData = this.isJson(json_arr_data);
+        if (!isArrayData && !isJsonData) {
+          return false;
+        }
+        var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
+        for (var key in json_arr_data) {
+            var compare = false;
+            var keyValue = json_arr_data[key];
+            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+                compare = (this.compare(isQueryArray ? key * 1 : key, nodeKey) && this.compare(keyValue, nodeValue));
+            }
+            else if (nodeKey || (nodeKey === 0)) {
+                compare = this.compare(isQueryArray ? key * 1 : key, nodeKey);
+            }
+            else if (nodeValue) {
+                compare = this.compare(keyValue, nodeValue);
+            }
+            if (compare) return true;
+        }
+        return false;
+    },
+    /**
      * 打印日志信息
      * @Author   dingyang
      * @DateTime 2018-04-16
@@ -139,11 +171,18 @@ window._$_ = {
      * @return   {[type]}                        [description]
      */
     insertBefore: function (config) {
-        return this._insertBeforeOrAfter(config, 'before');
+        return this._insertBeforeOrAfter(config, 'before', 'strict');
     },
 
     insertAfter: function (config) {
-        return this._insertBeforeOrAfter(config, 'after');
+        return this._insertBeforeOrAfter(config, 'after', 'strict');
+    },
+    insertBefore2: function (config) {
+        return this._insertBeforeOrAfter(config, 'before', 'contain');
+    },
+
+    insertAfter2: function (config) {
+        return this._insertBeforeOrAfter(config, 'after', 'contain');
     },
     /**
      * 执行插入数据[深拷贝思想]
@@ -151,9 +190,10 @@ window._$_ = {
      * @DateTime 2018-05-17
      * @param    {[type]}   config               [description]
      * @param    {[type]}   type                 描述在查找元素之前插入还是之后插入‘before’|'after'
+     * @param    {[type]}   modeType             匹配模式'strict'|'contain'
      * @return   {[type]}                        [description]
      */
-    _insertBeforeOrAfter: function (config, type) {
+    _insertBeforeOrAfter: function (config, type, modeType) {
         var json_arr_data = config.data,
                 nodeValue = config.value,
                   nodeKey = config.key,
@@ -171,16 +211,23 @@ window._$_ = {
         var results = isArrayData ? [] : {};
         for (var key in json_arr_data) {
             var keyValue = json_arr_data[key];
+            if(modeType === 'contain') {
+                if ((nodeKey || (nodeKey === 0)) || nodeValue) {
+                    config.data = keyValue;
+                    var compare = this.toolUtil.isContain(config);
+                }
+            } else {
+               if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+                    var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
+                }
+                else if (nodeKey || (nodeKey === 0)) {
+                    var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
+                }
+                else if (nodeValue) {
+                    var compare = this.toolUtil.compare(keyValue, nodeValue);
+                }             
+            }
 
-            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-            }
-            else if (nodeKey || (nodeKey === 0)) {
-                var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-            }
-            else if (nodeValue) {
-                var compare = this.toolUtil.compare(keyValue, nodeValue);
-            }
             if (compare && type === 'before') {
                 // 如果命中比对规则
                 if (isArrayData) {
@@ -193,9 +240,9 @@ window._$_ = {
             if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                 config.data = keyValue;
                 if (isArrayData) {
-                    results.push(arguments.callee.call(this, config, type));
+                    results.push(arguments.callee.call(this, config, type, modeType));
                 } else {
-                    results[key] = arguments.callee.call(this, config, type);
+                    results[key] = arguments.callee.call(this, config, type, modeType);
                 }
             } else {
                 if (isArrayData) {
@@ -218,14 +265,21 @@ window._$_ = {
         return results;
     },
 
+    delete: function (config) {
+        return this._delete(config, 'strict');
+    },
+    delete2: function (config) {
+        return this._delete(config, 'contain');
+    },
     /**
      * 元素节点删除
      * @Author   dingyang
      * @DateTime 2018-05-17
      * @param    {[type]}   config               [description]
+     * @param    {[type]}   modeType             匹配模式'strict'|'contain'
      * @return   {[type]}                        [description]
      */
-    delete: function (config) {
+    _delete: function (config, modeType) {
         var json_arr_data = config.data,
                 nodeValue = config.value,
                   nodeKey = config.key;
@@ -240,22 +294,29 @@ window._$_ = {
         var results = isArrayData ? [] : {};
         for (var key in json_arr_data) {
             var keyValue = json_arr_data[key];
-            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-            }
-            else if (nodeKey || (nodeKey === 0)) {
-                var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-            }
-            else if (nodeValue) {
-                var compare = this.toolUtil.compare(keyValue, nodeValue);
+            if(modeType === 'contain') {
+                if ((nodeKey || (nodeKey === 0)) || nodeValue) {
+                    config.data = keyValue;
+                    var compare = this.toolUtil.isContain(config);
+                }
+            } else {
+               if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+                    var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
+                }
+                else if (nodeKey || (nodeKey === 0)) {
+                    var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
+                }
+                else if (nodeValue) {
+                    var compare = this.toolUtil.compare(keyValue, nodeValue);
+                }             
             }
             if (compare) continue;
             if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                 config.data = keyValue;
                 if (isArrayData) {
-                    results.push(arguments.callee.call(this, config));
+                    results.push(arguments.callee.call(this, config, modeType));
                 } else {
-                    results[key] = arguments.callee.call(this, config);
+                    results[key] = arguments.callee.call(this, config, modeType);
                 }
             } else {
                 if (isArrayData) {
@@ -369,28 +430,30 @@ window._$_ = {
         }
         return results;
     },
-    nextSibling: function () {
-        
+
+    querySiblings: function (config) {
+        this.tmpSiblings = [];
+        this._querySiblings(config, 'strict');
+        var results = this.toolUtil.deepCopy(this.tmpSiblings);
+        this.tmpSiblings = [];
+        return results;
     },
-    preSibling: function () {
-        
-    },
-    firstChild: function () {
-        
+    querySiblings2: function (config) {
+        this.tmpSiblings = [];
+        this._querySiblings(config, 'contain');
+        var results = this.toolUtil.deepCopy(this.tmpSiblings);
+        this.tmpSiblings = [];
+        return results;
     },
     /**
      * 兄弟元素查找
      * @Author   dingyang
      * @DateTime 2018-05-17
      * @param    {[type]}   config               [description]
+     * @param    {[type]}   modeType             匹配模式'strict'|'contain'
      * @return   {[type]}                        [description]
      */
-    querySiblings: function (config) {
-        this.tmpSiblings = [];
-        this._querySiblings(config);
-        return this.tmpSiblings;
-    },
-    _querySiblings: function (config) {
+    _querySiblings: function (config, modeType) {
         var json_arr_data = config.data,
                 nodeValue = config.value,
                   nodeKey = config.key;
@@ -407,14 +470,21 @@ window._$_ = {
         for (var key in json_arr_data) {
             var keyValue = json_arr_data[key];
             results.push(keyValue);
-            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-            }
-            else if (nodeKey || (nodeKey === 0)) {
-                var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-            }
-            else if (nodeValue) {
-                var compare = this.toolUtil.compare(keyValue, nodeValue);
+            if(modeType === 'contain') {
+                if ((nodeKey || (nodeKey === 0)) || nodeValue) {
+                    config.data = keyValue;
+                    var compare = this.toolUtil.isContain(config);
+                }
+            } else {
+               if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+                    var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
+                }
+                else if (nodeKey || (nodeKey === 0)) {
+                    var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
+                }
+                else if (nodeValue) {
+                    var compare = this.toolUtil.compare(keyValue, nodeValue);
+                }             
             }
             if (compare) {
                 results.pop();
@@ -429,7 +499,7 @@ window._$_ = {
         if (subData.length) {
             for (var i = 0; i < subData.length; i++) {
                 config.data = subData[i];
-                arguments.callee.call(this, config);
+                arguments.callee.call(this, config, modeType);
             }
         }
     }
