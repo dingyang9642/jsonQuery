@@ -78,7 +78,7 @@ window._$_tool_ = {
         var isArrayData = this.isArray(json_arr_data),
              isJsonData = this.isJson(json_arr_data);
         if (!isArrayData && !isJsonData) {
-          return false;
+            return false;
         }
         var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
         for (var key in json_arr_data) {
@@ -110,8 +110,39 @@ window._$_tool_ = {
     }
 };
 window._$_ = {
-	toolUtil: _$_tool_,
-
+	  toolUtil: _$_tool_,
+    // 判断模式
+    MODE_TYPE: {
+       STRICT: 'strict',
+       CONTAIN: 'contain'
+    },
+    _filterCompare: function (modeType, key, keyValue, nodeKey, nodeValue) {
+        var compare =  false;
+        var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
+        if(modeType === this.MODE_TYPE.CONTAIN) {
+            if ((nodeKey || (nodeKey === 0)) || nodeValue) {
+                compare = this.toolUtil.isContain({
+                    key: nodeKey,
+                    value: nodeValue,
+                    data: keyValue
+                });
+            }
+            return compare;
+        }
+        if (modeType === this.MODE_TYPE.STRICT) {
+           if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+                compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
+            }
+            else if (nodeKey || (nodeKey === 0)) {
+                compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
+            }
+            else if (nodeValue) {
+                compare = this.toolUtil.compare(keyValue, nodeValue);
+            }
+            return compare;           
+        }
+        return compare;
+    },
     /**
      * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
      * @Author   dingyang
@@ -171,18 +202,18 @@ window._$_ = {
      * @return   {[type]}                        [description]
      */
     insertBefore: function (config) {
-        return this._insertBeforeOrAfter(config, 'before', 'strict');
+        return this._insertBeforeOrAfter(config, 'before', this.MODE_TYPE.STRICT);
     },
 
     insertAfter: function (config) {
-        return this._insertBeforeOrAfter(config, 'after', 'strict');
+        return this._insertBeforeOrAfter(config, 'after', this.MODE_TYPE.STRICT);
     },
     insertBefore2: function (config) {
-        return this._insertBeforeOrAfter(config, 'before', 'contain');
+        return this._insertBeforeOrAfter(config, 'before', this.MODE_TYPE.CONTAIN);
     },
 
     insertAfter2: function (config) {
-        return this._insertBeforeOrAfter(config, 'after', 'contain');
+        return this._insertBeforeOrAfter(config, 'after', this.MODE_TYPE.CONTAIN);
     },
     /**
      * 执行插入数据[深拷贝思想]
@@ -190,7 +221,7 @@ window._$_ = {
      * @DateTime 2018-05-17
      * @param    {[type]}   config               [description]
      * @param    {[type]}   type                 描述在查找元素之前插入还是之后插入‘before’|'after'
-     * @param    {[type]}   modeType             匹配模式'strict'|'contain'
+     * @param    {[type]}   modeType             匹配模式this.MODE_TYPE.STRICT|this.MODE_TYPE.CONTAIN
      * @return   {[type]}                        [description]
      */
     _insertBeforeOrAfter: function (config, type, modeType) {
@@ -211,23 +242,7 @@ window._$_ = {
         var results = isArrayData ? [] : {};
         for (var key in json_arr_data) {
             var keyValue = json_arr_data[key];
-            if(modeType === 'contain') {
-                if ((nodeKey || (nodeKey === 0)) || nodeValue) {
-                    config.data = keyValue;
-                    var compare = this.toolUtil.isContain(config);
-                }
-            } else {
-               if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                    var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-                }
-                else if (nodeKey || (nodeKey === 0)) {
-                    var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-                }
-                else if (nodeValue) {
-                    var compare = this.toolUtil.compare(keyValue, nodeValue);
-                }             
-            }
-
+            var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
             if (compare && type === 'before') {
                 // 如果命中比对规则
                 if (isArrayData) {
@@ -266,17 +281,17 @@ window._$_ = {
     },
 
     delete: function (config) {
-        return this._delete(config, 'strict');
+        return this._delete(config, this.MODE_TYPE.STRICT);
     },
     delete2: function (config) {
-        return this._delete(config, 'contain');
+        return this._delete(config, this.MODE_TYPE.CONTAIN);
     },
     /**
      * 元素节点删除
      * @Author   dingyang
      * @DateTime 2018-05-17
      * @param    {[type]}   config               [description]
-     * @param    {[type]}   modeType             匹配模式'strict'|'contain'
+     * @param    {[type]}   modeType             匹配模式this.MODE_TYPE.STRICT|this.MODE_TYPE.CONTAIN
      * @return   {[type]}                        [description]
      */
     _delete: function (config, modeType) {
@@ -294,22 +309,7 @@ window._$_ = {
         var results = isArrayData ? [] : {};
         for (var key in json_arr_data) {
             var keyValue = json_arr_data[key];
-            if(modeType === 'contain') {
-                if ((nodeKey || (nodeKey === 0)) || nodeValue) {
-                    config.data = keyValue;
-                    var compare = this.toolUtil.isContain(config);
-                }
-            } else {
-               if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                    var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-                }
-                else if (nodeKey || (nodeKey === 0)) {
-                    var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-                }
-                else if (nodeValue) {
-                    var compare = this.toolUtil.compare(keyValue, nodeValue);
-                }             
-            }
+            var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
             if (compare) continue;
             if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                 config.data = keyValue;
@@ -358,15 +358,7 @@ window._$_ = {
                 config.data = keyValue;
                 results = results.concat(arguments.callee.call(this, config));
             }
-            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-            }
-            else if (nodeKey || (nodeKey === 0)) {
-                var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-            }
-            else if (nodeValue) {
-                var compare = this.toolUtil.compare(keyValue, nodeValue);
-            }
+            var compare = this._filterCompare(this.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
             if (compare) {
                 results.push(isQueryArray ? keyValue : json_arr_data);
             }
@@ -399,15 +391,7 @@ window._$_ = {
         // 其次，如果数据是json格式数据{a:1, b:1} || [a, b]
         for (var key in json_arr_data) {
             var keyValue = json_arr_data[key];
-            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-            }
-            else if (nodeKey || (nodeKey === 0)) {
-                var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-            }
-            else if (nodeValue) {
-                var compare = this.toolUtil.compare(keyValue, nodeValue);
-            }
+            var compare = this._filterCompare(this.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
             if (compare) {
                 results.push(json_arr_data);
                 if (isQueryArray) {
@@ -433,14 +417,14 @@ window._$_ = {
 
     querySiblings: function (config) {
         this.tmpSiblings = [];
-        this._querySiblings(config, 'strict');
+        this._querySiblings(config, this.MODE_TYPE.STRICT);
         var results = this.toolUtil.deepCopy(this.tmpSiblings);
         this.tmpSiblings = [];
         return results;
     },
     querySiblings2: function (config) {
         this.tmpSiblings = [];
-        this._querySiblings(config, 'contain');
+        this._querySiblings(config, this.MODE_TYPE.CONTAIN);
         var results = this.toolUtil.deepCopy(this.tmpSiblings);
         this.tmpSiblings = [];
         return results;
@@ -450,7 +434,7 @@ window._$_ = {
      * @Author   dingyang
      * @DateTime 2018-05-17
      * @param    {[type]}   config               [description]
-     * @param    {[type]}   modeType             匹配模式'strict'|'contain'
+     * @param    {[type]}   modeType             匹配模式this.MODE_TYPE.STRICT|this.MODE_TYPE.CONTAIN
      * @return   {[type]}                        [description]
      */
     _querySiblings: function (config, modeType) {
@@ -470,22 +454,7 @@ window._$_ = {
         for (var key in json_arr_data) {
             var keyValue = json_arr_data[key];
             results.push(keyValue);
-            if(modeType === 'contain') {
-                if ((nodeKey || (nodeKey === 0)) || nodeValue) {
-                    config.data = keyValue;
-                    var compare = this.toolUtil.isContain(config);
-                }
-            } else {
-               if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                    var compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-                }
-                else if (nodeKey || (nodeKey === 0)) {
-                    var compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-                }
-                else if (nodeValue) {
-                    var compare = this.toolUtil.compare(keyValue, nodeValue);
-                }             
-            }
+            var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
             if (compare) {
                 results.pop();
             }

@@ -51,7 +51,11 @@ console.log('queryParents查找结果：', qryResults2);
 var compareResult = _$_tool_.compare({a: 1, b: [{}]}, {a: 1, b: [{}]});
 console.log('compare比对结果：', compareResult);
 
-var isContainResult = _$_tool_.isContain({a: 1, b: 1}, 'a', 2);
+var isContainResult = _$_tool_.isContain({
+	key: 'a',
+	value: 1,
+	data: {a:2, b:{a: 1}}
+});
 console.log('isContain比对结果：', isContainResult);
 
 var formatChildrenResult = _$_.formatChildren({
@@ -132,25 +136,25 @@ var insertBefore = _$_.insertBefore2({
         key: 'test',
         value: 'sss'
     },
-	data: [1,3,{a:2},{a:2}]
+	data: [{a:2}]
 });
 console.log('insertBefore结果：', insertBefore);
 
 var insertAfter = _$_.insertAfter2({
-    key: 'a',
-    value: 2,
+	key: 'a',
+	value: 2,
     target: {
         key: 'test',
         value: 'sss'
     },
-    data: [1,3,{a:2,b:3},{a:2}]
+	data: [{a:2}]
 });
 console.log('insertAfter结果：', insertAfter);
 
 var deleteNodes = _$_.delete2({
-    key: 'a',
+    key: null,
     value: 2,
-    data: [1,3,{a:2},{a:2}]
+    data: [1, 3, 2, {a:2}, {a:2}]
 });
 console.log('deleteNodes结果：', deleteNodes);
 
