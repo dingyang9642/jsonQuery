@@ -154,7 +154,7 @@ console.log('insertAfter结果：', insertAfter);
 var deleteNodes = _$_.delete2({
     key: null,
     value: 2,
-    data: [1, 3, 2, {a:2}, {a:2}]
+    data: [1, 3, 3, {a:4, b:{c:2}}, {a:2}]
 });
 console.log('deleteNodes结果：', deleteNodes);
 

@@ -130,7 +130,7 @@ window._$_ = {
             return compare;
         }
         if (modeType === this.MODE_TYPE.STRICT) {
-           if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+            if ((nodeKey || (nodeKey === 0)) && nodeValue) {
                 compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
             }
             else if (nodeKey || (nodeKey === 0)) {
@@ -281,9 +281,14 @@ window._$_ = {
     },
 
     delete: function (config) {
+        var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
+        if (compare) return null;
         return this._delete(config, this.MODE_TYPE.STRICT);
     },
     delete2: function (config) {
+        // 首先判断自身是否满足条件，如果满足条件直接返回null
+        var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
+        if (compare) return null;
         return this._delete(config, this.MODE_TYPE.CONTAIN);
     },
     /**
