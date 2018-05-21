@@ -23,29 +23,7 @@ var qryResults = _$_.queryNodes({
 });
 console.log('queryNodes查找结果：', qryResults);
 
-var qryResults2 = _$_.queryParents({
-	key: 'id',
-	value: 3,
-	data: 
-	   [{
-		    id: 1,
-		    children: [{
-		    	id: 2
-		    }, {
-		    	id: 3
-		    }]
-		}, {
-	        id: 11,
-	        children: [{
-	    	    id: 22
-	        }, {
-	    	    id: 33,
-	    	    children: [{
-	    		    id: 66
-	    	    }]
-	        }]
-	    }]
-});
+var qryResults2 = _$_.queryParents({data: {id:1,children:[{id:5}]}, key: 'id', value: 5});
 console.log('queryParents查找结果：', qryResults2);
 
 var compareResult = _$_tool_.compare({a: 1, b: [{}]}, {a: 1, b: [{}]});
@@ -129,15 +107,7 @@ var qrySiblings = _$_.querySiblings2({
 console.log('qrySiblings查找结果：', qrySiblings);
 
 
-var insertBefore = _$_.insertBefore2({
-	key: 'a',
-	value: 2,
-    target: {
-        key: 'test',
-        value: 'sss'
-    },
-	data: [{a:2}]
-});
+var insertBefore = _$_.insertBefore2({data: [1,2,{a:2}], key: null, value: 2, target: {key: 'b', value: '3'}});
 console.log('insertBefore结果：', insertBefore);
 
 var insertAfter = _$_.insertAfter2({
