@@ -1,0 +1,25 @@
+{
+  "name": "jsonqueryjs",
+  "version": "1.0.0",
+  "description": "支持对象数据（json/array）数据的查找及格式化数据",
+  "main": "json.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dingyang9642/jsonQuery.git"
+  },
+  "keywords": [
+    "json",
+    "query",
+    "format",
+    "delete"
+  ],
+  "author": "dingyang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dingyang9642/jsonQuery/issues"
+  },
+  "homepage": "https://github.com/dingyang9642/jsonQuery#readme"
+}

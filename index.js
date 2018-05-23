@@ -26,16 +26,6 @@ console.log('queryNodes查找结果：', qryResults);
 var qryResults2 = _$_.queryParents({data: {id:1,children:[{id:5}]}, key: 'id', value: 5});
 console.log('queryParents查找结果：', qryResults2);
 
-var compareResult = _$_tool_.compare({a: 1, b: [{}]}, {a: 1, b: [{}]});
-console.log('compare比对结果：', compareResult);
-
-var isContainResult = _$_tool_.isContain({
-	key: 'a',
-	value: 1,
-	data: {a:2, b:{a: 1}}
-});
-console.log('isContain比对结果：', isContainResult);
-
 var formatChildrenResult = _$_.formatChildren({
 	id: 'id',
 	parentId: 'parentId',
@@ -127,4 +117,24 @@ var deleteNodes = _$_.delete2({
     data: [1, 3, 3, {a:4, b:{c:2}}, {a:2}]
 });
 console.log('deleteNodes结果：', deleteNodes);
+
+var deleteAfterSiblings = _$_.deleteAfterSiblings({
+    key: null,
+    value: 3,
+    data: [1, 2, {a:3, b:4, c:5}, 0, 3, {a:4, b:{c:2}}, {a:2}]
+});
+console.log('deleteAfterSiblings结果：', deleteAfterSiblings);
+
+var deleteBeforeSiblings = _$_.deleteBeforeSiblings({
+    key: null,
+    value: 3,
+    data: [1, 2, {a:3, b:4, c:5}, 0, 3, {a:4, b:{c:2}}, {a:2}]
+});
+console.log('deleteBeforeSiblings结果：', deleteBeforeSiblings);
+var deleteAllSiblings = _$_.deleteAllSiblings({
+    key: null,
+    value: 4,
+    data: [1, 2, {a:3, b:4, c:5}, 0, 1, {a:4, b:{c:2}}, {a:2}]
+});
+console.log('deleteAllSiblings结果：', deleteAllSiblings);
 

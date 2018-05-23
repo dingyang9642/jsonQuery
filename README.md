@@ -1,7 +1,7 @@
 # jsonQuery.js
 ## 对象数据查询相关方法
 
-### _$_.queryNodes(config)
+### \_$\_.queryNodes(config)
 ```
 /**
  * 从对象数据中查找符合条件的节点对象集合
@@ -21,7 +21,7 @@
  */
 ```
 
-### _$_.queryParents(config)
+### \_$\_.queryParents(config)
 ```
 /**
  * 查找父节点对象集合（注：查找到则中止后续查找）
@@ -107,22 +107,24 @@
  */
 ```
 
-### _$_.delete(config)  |  _$_.delete2(config)
+### _$_.deleteAllSiblings(config) | _$_.deleteAllSiblings2(config) | _$_.deleteBeforeSiblings(config) 
+    _$_.deleteBeforeSiblings2(config) | _$_.deleteAfterSiblings(config) | _$_.deleteAfterSiblings2(config)
 ```
 /**
- * 节点对象删除
+ * 删除兄弟节点
  * @Author   dingyang
  * @example 严格模式【严格同一级匹配】
- * var result = delete({data: [1,{a:2},[2]], key: null, value: 2});  返回 [1,{},[]]
- * @example 包含模式【对象包含查找条件模式】
- * var result = delete({data: [1,{a:2},[2]], key: null, value: 2}); 返回 [1]
- * 解释：数组中第2项{a;2},第3项[2]符合查找条件，因为此时是兼容模式,所以返回[1]
+ * var result = deleteAllSiblings({data: [1,2,3], key: null, value: 2});  返回 [2]
+ * var result = deleteBeforeSiblings({data: [1,2,3], key: null, value: 2});  返回 [2,3]
+ * var result = deleteAfterSiblings({data: [1,2,3], key: null, value: 2});  返回 [1,2]
+ * 包含模式【对象包含查找条件模式】同之前匹配模式
  * @DateTime 2018-04-24
  * @param    {Object}                         config         配置项
  * @param    {string}                         config.data    配置项-数据源                          
  * @param    {(number|string|null|undefined)} config.key     配置项-key
  * @param    {void}                           config.value   配置项-value
  * @param    {string}                         modeType       配置模式（提供两种模式'strict'|'contain'）
+ * @param    {string}                         rule           删除规则（提供三种模式'before'|'after'|'all'）
  * @return   {object}                         返回新的对象集合
  */
 ```
