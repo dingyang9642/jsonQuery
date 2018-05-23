@@ -39,7 +39,7 @@
  */
 ```
 
-### _$_.querySiblings(config)  |  _$_.querySiblings2(config)
+### \_$\_.querySiblings(config)  |  _$_.querySiblings2(config)
 ```
 /**
  * 查找兄弟节点对象集合
@@ -63,7 +63,7 @@
 
 ## 对象数据操作相关方法
 
-### _$_.insertBefore(config)  |  _$_.insertBefore2(config) | _$_.insertAfter(config)  |  _$_.insertAfter2(config)
+### \_$\_.insertBefore(config)  |  \_$\_.insertBefore2(config) | \_$\_.insertAfter(config)  |  \_$\_.insertAfter2(config)
 ```
 /**
  * 执行目标对象的前置插入或者后置插入
@@ -87,7 +87,7 @@
  */
 ```
 
-### _$_.delete(config)  |  _$_.delete2(config)
+### \_$\_.delete(config)  |  \_$\_.delete2(config)
 ```
 /**
  * 节点对象删除
@@ -107,8 +107,8 @@
  */
 ```
 
-### _$_.deleteAllSiblings(config) | _$_.deleteAllSiblings2(config) | _$_.deleteBeforeSiblings(config) 
-    _$_.deleteBeforeSiblings2(config) | _$_.deleteAfterSiblings(config) | _$_.deleteAfterSiblings2(config)
+### \_$\_.deleteAllSiblings(config) | \_$\_.deleteAllSiblings2(config) | \_$\_.deleteBeforeSiblings(config) 
+    \_$\_.deleteBeforeSiblings2(config) | \_$\_.deleteAfterSiblings(config) | \_$\_.deleteAfterSiblings2(config)
 ```
 /**
  * 删除兄弟节点
@@ -129,7 +129,7 @@
  */
 ```
 
-### _$_.formatChildren(config)
+### \_$\_.formatChildren(config)
 ```
 /**
  * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
@@ -150,7 +150,7 @@
 
 ## 基本工具方法
 
-### _$_tool_.isJson(data)
+### \_$\_tool\_.isJson(data)
 ```
 /**
  * 判断数据类型是否为json数据类型
@@ -161,7 +161,7 @@
  */
 ```
 
-### _$_tool_.isArray(data)
+### \_$\_tool\_.isArray(data)
 ```
 /**
  * 判断数据类型是否为array数据类型
@@ -172,7 +172,7 @@
  */
 ```
 
-### _$_tool_.getJsonArrLength(data)
+### \_$\_tool\_.getJsonArrLength(data)
 ```
 /**
  * 返回array||json键长度（个数）
@@ -183,7 +183,7 @@
  */
 ```
 
-### _$_tool_.deepCopy(obj)
+### \_$\_tool\_.deepCopy(obj)
 ```
 /**
  * 对象深度拷贝【原始数据不产生变化】
@@ -194,7 +194,7 @@
  */
 ```
 
-### _$_tool_.compare(data1, data2)
+### \_$\_tool\_.compare(data1, data2)
 ```
 /**
  * 数据比较是否相等【此处不进行引用类型地址比较】
@@ -206,7 +206,7 @@
  */
 ```
 
-### _$_tool_.isContain(config)
+### \_$\_tool\_.isContain(config)
 ```
 /**
  * 判断指定key或者value是否位于对象中]
@@ -226,7 +226,7 @@
  */
 ```
 
-### _$_tool_.logInfo(type, info)
+### \_$\_tool\_.logInfo(type, info)
 ```
 /**
  * 打印日志信息
