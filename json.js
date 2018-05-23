@@ -480,6 +480,62 @@
             return results;
         },
 
+
+        replace: function (config) {
+            var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
+            if (compare) return config.target;
+            return this._replace(config, this.MODE_TYPE.STRICT);
+        },
+        replace2: function (config) {
+            var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
+            if (compare) return config.target;
+            return this._replace(config, this.MODE_TYPE.CONTAIN);
+        },
+        _replace: function (config, modeType) {
+            var json_arr_data = config.data,
+                    nodeValue = config.value,
+                      nodeKey = config.key,
+                      target = config.target;
+            var isArrayData = this.toolUtil.isArray(json_arr_data),
+                 isJsonData = this.toolUtil.isJson(json_arr_data),
+                    results = [];
+            // 首先，进行异常逻辑处理(如果不是json也不是array)
+            if (!isJsonData && !isArrayData) {
+                return json_arr_data;
+            }
+            var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
+            var results = isArrayData ? [] : {};
+            for (var key in json_arr_data) {
+                var keyValue = json_arr_data[key];
+                var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
+                if (compare) {
+                    if (isArrayData) {
+                        results.push(target);
+                    } else {
+                        results[key] = target;
+                    }
+                    continue;
+                }
+                if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
+                    config.data = keyValue;
+                    if (isArrayData) {
+                        results.push(arguments.callee.call(this, config, modeType));
+                    } else {
+                        results[key] = arguments.callee.call(this, config, modeType);
+                    }
+                } else {
+                    if (isArrayData) {
+                        results.push(keyValue);
+                    } else {
+                        results[key] = keyValue;
+                    }
+                }
+                
+
+            }
+            return results;
+        },
+
     	/**
     	 * 从对象数据中查找符合条件的节点对象集合
          * @Author   dingyang
