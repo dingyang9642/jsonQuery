@@ -107,8 +107,7 @@
  */
 ```
 
-### \_$\_.deleteAllSiblings(config) | \_$\_.deleteAllSiblings2(config) | \_$\_.deleteBeforeSiblings(config) 
-    \_$\_.deleteBeforeSiblings2(config) | \_$\_.deleteAfterSiblings(config) | \_$\_.deleteAfterSiblings2(config)
+### \_$\_.deleteAllSiblings(config) | \_$\_.deleteAllSiblings2(config) | \_$\_.deleteBeforeSiblings(config) | \_$\_.deleteBeforeSiblings2(config) | \_$\_.deleteAfterSiblings(config) | \_$\_.deleteAfterSiblings2(config)
 ```
 /**
  * 删除兄弟节点
@@ -125,6 +124,30 @@
  * @param    {void}                           config.value   配置项-value
  * @param    {string}                         modeType       配置模式（提供两种模式'strict'|'contain'）
  * @param    {string}                         rule           删除规则（提供三种模式'before'|'after'|'all'）
+ * @return   {object}                         返回新的对象集合
+ */
+```
+
+### \_$\_.replace(config) | \_$\_.replace2(config)
+```
+/**
+ * 指定位置节点替换
+ * @Author   dingyang
+ * @example 严格模式【严格同一级匹配】
+ * var result = replace({data: [1,{a:2}], key: null, value: 2, target: {key: 'b', value: '3'}}); 
+ * 解释：数组中{a:2}符合条件，所以返回[1,{b:3}]
+ * @example 包含模式【对象包含查找条件模式】
+ * var result = replace2({data: [1,{a:2}], key: null, value: 2, target: {key: 'b', value: '3'}}); 
+ * 解释：包含模式下返回[1,3] 此时因为是在数组中执行replace,所以会忽略target中的key
+ * @DateTime 2018-04-24
+ * @param    {Object}                         config         配置项
+ * @param    {string}                         config.data    配置项-数据源                          
+ * @param    {(number|string|null|undefined)} config.key     配置项-key
+ * @param    {void}                           config.value   配置项-value
+ * @param    {object}                         config.target  配置项-target
+ * @param    {(number|string|null|undefined)} target.key     配置项target-key
+ * @param    {void}                           target.value   配置项target-value
+ * @param    {string}                         modeType       配置模式（提供两种模式'strict'|'contain'）
  * @return   {object}                         返回新的对象集合
  */
 ```

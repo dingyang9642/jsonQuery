@@ -491,6 +491,27 @@
             if (compare) return config.target.value;
             return this._replace(config, this.MODE_TYPE.CONTAIN);
         },
+
+        /**
+         * 指定位置节点替换
+         * @Author   dingyang
+         * @example 严格模式【严格同一级匹配】
+         * var result = replace({data: [1,{a:2}], key: null, value: 2, target: {key: 'b', value: '3'}}); 
+         * 解释：数组中{a:2}符合条件，所以返回[1,{b:3}]
+         * @example 包含模式【对象包含查找条件模式】
+         * var result = replace2({data: [1,{a:2}], key: null, value: 2, target: {key: 'b', value: '3'}}); 
+         * 解释：包含模式下返回[1,3] 此时因为是在数组中执行replace,所以会忽略target中的key
+         * @DateTime 2018-04-24
+         * @param    {Object}                         config         配置项
+         * @param    {string}                         config.data    配置项-数据源                          
+         * @param    {(number|string|null|undefined)} config.key     配置项-key
+         * @param    {void}                           config.value   配置项-value
+         * @param    {object}                         config.target  配置项-target
+         * @param    {(number|string|null|undefined)} target.key     配置项target-key
+         * @param    {void}                           target.value   配置项target-value
+         * @param    {string}                         modeType       配置模式（提供两种模式'strict'|'contain'）
+         * @return   {object}                         返回新的对象集合
+         */
         _replace: function (config, modeType) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
