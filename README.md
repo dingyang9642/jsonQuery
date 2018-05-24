@@ -1,9 +1,9 @@
 # jsonQuery.js
 
 ### 版本更新记录
-1.0.6 说明文档修改
-...
-1.0.9 说明文档修改
+1.0.6  说明文档修改<br>
+...<br>
+1.0.10 说明文档修改<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>
