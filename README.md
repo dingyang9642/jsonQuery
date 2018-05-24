@@ -2,6 +2,7 @@
 
 ### 对象数据查询相关方法
 <ul>
+    <li>[queryNodes：节点查询](#data-query-nodes)</li>
     <li><a href="#data-query-nodes" target="_self">queryNodes：节点查询</a></li>
     <li><a href="#data-query-parents" target="_self">queryParents：父节点查询</a></li>
     <li><a href="#data-query-siblings" target="_self">querySiblings：兄弟节点查询</a></li>
