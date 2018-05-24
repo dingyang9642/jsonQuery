@@ -1,7 +1,39 @@
 # jsonQuery.js
+
+### 对象数据查询相关方法
+<ul>
+    <li><a href="#data-query-nodes" target="_self">queryNodes：节点查询</a></li>
+    <li><a href="#data-query-parents" target="_self">queryParents：父节点查询</a></li>
+    <li><a href="#data-query-siblings" target="_self">querySiblings：兄弟节点查询</a></li>
+</ul>
+
+### 对象数据操作相关方法
+<ul>
+    <li><a href="#data-format-insert" target="_self">insertBefore|insertAfter：节点插入</a></li>
+    <li><a href="#data-format-delete" target="_self">delete：节点删除</a></li>
+    <li><a href="#data-format-siblings" target="_self">deleteSiblings：相关兄弟节点删除</a></li>
+    <li><a href="#data-format-replace" target="_self">replace：节点替换</a></li>
+    <li><a href="#data-format-format" target="_self">formatChildren：数据格式化-父子关系</a></li>
+</ul>
+
+### 其他工具方法
+<ul>
+    <li><a href="#data-tool-json" target="_self">isJson：json对象判断</a></li>
+    <li><a href="#data-tool-array" target="_self">isArray：array对象判断</a></li>
+    <li><a href="#data-tool-length" target="_self">getJsonArrLength：获取对象长度</a></li>
+    <li><a href="#data-tool-copy" target="_self">deepCopy：对象深度拷贝</a></li>
+    <li><a href="#data-tool-compare" target="_self">compare：两组数据比较，对象不进行地址比较</a></li>
+    <li><a href="#data-tool-contain" target="_self">isContain：判断对象中是否包含指定元素</a></li>
+    <li><a href="#data-tool-log" target="_self">logInfo：日志信息控制台输出</a></li>
+</ul>
+
+
+
+
 ## 对象数据查询相关方法
 
-### \_$\_.queryNodes(config)
+
+### <span id="data-query-nodes"><font>\_$\_.queryNodes(config)</font></span>
 ```
 /**
  * 从对象数据中查找符合条件的节点对象集合
@@ -21,7 +53,7 @@
  */
 ```
 
-### \_$\_.queryParents(config)
+###   <span id="data-query-parents"><font>\_$\_.queryParents(config)</font></span>
 ```
 /**
  * 查找父节点对象集合（注：查找到则中止后续查找）
@@ -39,7 +71,7 @@
  */
 ```
 
-### \_$\_.querySiblings(config)  |  _$_.querySiblings2(config)
+### <span id="data-query-siblings"><font>\_$\_.querySiblings(config)  |  _$_.querySiblings2(config) </font></span>
 ```
 /**
  * 查找兄弟节点对象集合
@@ -63,7 +95,7 @@
 
 ## 对象数据操作相关方法
 
-### \_$\_.insertBefore(config)  |  \_$\_.insertBefore2(config) | \_$\_.insertAfter(config)  |  \_$\_.insertAfter2(config)
+### <span id="data-format-insert"><font>\_$\_.insertBefore(config)  |  \_$\_.insertBefore2(config) | \_$\_.insertAfter(config)  |  \_$\_.insertAfter2(config)</font></span>
 ```
 /**
  * 执行目标对象的前置插入或者后置插入
@@ -87,7 +119,7 @@
  */
 ```
 
-### \_$\_.delete(config)  |  \_$\_.delete2(config)
+### <span id="data-format-delete"><font>\_$\_.delete(config)  |  \_$\_.delete2(config)</font></span>
 ```
 /**
  * 节点对象删除
@@ -107,7 +139,7 @@
  */
 ```
 
-### \_$\_.deleteAllSiblings(config) | \_$\_.deleteAllSiblings2(config) | \_$\_.deleteBeforeSiblings(config) | \_$\_.deleteBeforeSiblings2(config) | \_$\_.deleteAfterSiblings(config) | \_$\_.deleteAfterSiblings2(config)
+### <span id="data-format-siblings"><font>\_$\_.deleteAllSiblings(config) | \_$\_.deleteAllSiblings2(config) | \_$\_.deleteBeforeSiblings(config) | \_$\_.deleteBeforeSiblings2(config) | \_$\_.deleteAfterSiblings(config) | \_$\_.deleteAfterSiblings2(config)</font></span>
 ```
 /**
  * 删除兄弟节点
@@ -128,7 +160,7 @@
  */
 ```
 
-### \_$\_.replace(config) | \_$\_.replace2(config)
+### <span id="data-format-replace"><font>\_$\_.replace(config) | \_$\_.replace2(config)</font></span>
 ```
 /**
  * 指定位置节点替换
@@ -152,7 +184,7 @@
  */
 ```
 
-### \_$\_.formatChildren(config)
+### <span id="data-format-format"><font>\_$\_.formatChildren(config)</font></span>
 ```
 /**
  * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
@@ -173,7 +205,7 @@
 
 ## 基本工具方法
 
-### \_$\_tool\_.isJson(data)
+### <span id="data-tool-json"><font>\_$\_.toolUtil.isJson(data)</font></span>
 ```
 /**
  * 判断数据类型是否为json数据类型
@@ -184,7 +216,7 @@
  */
 ```
 
-### \_$\_tool\_.isArray(data)
+### <span id="data-tool-array"><font>\_$\_.toolUtil.isArray(data)</font></span>
 ```
 /**
  * 判断数据类型是否为array数据类型
@@ -195,7 +227,7 @@
  */
 ```
 
-### \_$\_tool\_.getJsonArrLength(data)
+### <span id="data-tool-length"><font>\_$\_.toolUtil.getJsonArrLength(data)</font></span>
 ```
 /**
  * 返回array||json键长度（个数）
@@ -206,7 +238,7 @@
  */
 ```
 
-### \_$\_tool\_.deepCopy(obj)
+### <span id="data-tool-copy"><font>\_$\_.toolUtil.deepCopy(obj)</font></span>
 ```
 /**
  * 对象深度拷贝【原始数据不产生变化】
@@ -217,7 +249,7 @@
  */
 ```
 
-### \_$\_tool\_.compare(data1, data2)
+### <span id="data-tool-compare"><font>\_$\_.toolUtil.compare(data1, data2)</font></span>
 ```
 /**
  * 数据比较是否相等【此处不进行引用类型地址比较】
@@ -229,7 +261,7 @@
  */
 ```
 
-### \_$\_tool\_.isContain(config)
+### <span id="data-tool-contain"><font>\_$\_.toolUtil.isContain(config)</font></span>
 ```
 /**
  * 判断指定key或者value是否位于对象中]
@@ -249,7 +281,7 @@
  */
 ```
 
-### \_$\_tool\_.logInfo(type, info)
+### <span id="data-tool-log"><font>\_$\_.toolUtil_.logInfo(type, info)</font></span>
 ```
 /**
  * 打印日志信息
