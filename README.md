@@ -7,7 +7,7 @@
 ### 使用说明
 commonJs使用：import _$_ from 'jsonqueryjs/json'<br>
 amd/cmd使用： define(['jsonqueryjs/json'], function(_$_) {} );<br>
-script引用：<script src='node_modules/jsonqueryjs/json.js'></script>
+script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
 
 ### 对象数据查询相关方法
 <ul>
