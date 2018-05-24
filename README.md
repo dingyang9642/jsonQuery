@@ -1,4 +1,6 @@
 # jsonQuery.js
+### 版本更新记录
+1.0.6 说明文档修改
 
 ### 对象数据查询相关方法
 <ul>
@@ -52,8 +54,8 @@
  * @return   {array}                          符合条件的节点对象集合
  */
 ```
-
-### <span id="data-query-parents"><font>\_$\_.queryParents(config)</font></span>
+<a name="data-query-parents"></a>
+### \_$\_.queryParents(config)
 ```
 /**
  * 查找父节点对象集合（注：查找到则中止后续查找）
@@ -70,8 +72,8 @@
  * @return   {array}                          符合条件的节点对象集合
  */
 ```
-
-### <span id="data-query-siblings"><font>\_$\_.querySiblings(config)  |  _$_.querySiblings2(config) </font></span>
+<a name="data-query-siblings"></a>
+### \_$\_.querySiblings(config)  |  _$_.querySiblings2(config)
 ```
 /**
  * 查找兄弟节点对象集合
@@ -95,7 +97,8 @@
 
 ## 对象数据操作相关方法
 
-### <span id="data-format-insert"><font>\_$\_.insertBefore(config)  |  \_$\_.insertBefore2(config) | \_$\_.insertAfter(config)  |  \_$\_.insertAfter2(config)</font></span>
+<a name="data-format-insert"></a>
+### \_$\_.insertBefore(config)  |  \_$\_.insertBefore2(config) | \_$\_.insertAfter(config)  |  \_$\_.insertAfter2(config)
 ```
 /**
  * 执行目标对象的前置插入或者后置插入
@@ -119,7 +122,8 @@
  */
 ```
 
-### <span id="data-format-delete"><font>\_$\_.delete(config)  |  \_$\_.delete2(config)</font></span>
+<a name="data-format-delete"></a>
+### \_$\_.delete(config)  |  \_$\_.delete2(config)
 ```
 /**
  * 节点对象删除
@@ -139,7 +143,8 @@
  */
 ```
 
-### <span id="data-format-siblings"><font>\_$\_.deleteAllSiblings(config) | \_$\_.deleteAllSiblings2(config) | \_$\_.deleteBeforeSiblings(config) | \_$\_.deleteBeforeSiblings2(config) | \_$\_.deleteAfterSiblings(config) | \_$\_.deleteAfterSiblings2(config)</font></span>
+<a name="data-format-siblings"></a>
+### \_$\_.deleteAllSiblings(config) | \_$\_.deleteAllSiblings2(config) | \_$\_.deleteBeforeSiblings(config) | \_$\_.deleteBeforeSiblings2(config) | \_$\_.deleteAfterSiblings(config) | \_$\_.deleteAfterSiblings2(config)
 ```
 /**
  * 删除兄弟节点
@@ -160,7 +165,8 @@
  */
 ```
 
-### <span id="data-format-replace"><font>\_$\_.replace(config) | \_$\_.replace2(config)</font></span>
+<a name="data-format-replace"></a>
+### \_$\_.replace(config) | \_$\_.replace2(config)
 ```
 /**
  * 指定位置节点替换
@@ -184,7 +190,8 @@
  */
 ```
 
-### <span id="data-format-format"><font>\_$\_.formatChildren(config)</font></span>
+<a name="data-format-format"></a>
+### \_$\_.formatChildren(config)
 ```
 /**
  * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
@@ -205,7 +212,8 @@
 
 ## 基本工具方法
 
-### <span id="data-tool-json"><font>\_$\_.toolUtil.isJson(data)</font></span>
+<a name="data-tool-json"></a>
+### \_$\_.toolUtil.isJson(data)
 ```
 /**
  * 判断数据类型是否为json数据类型
@@ -216,7 +224,8 @@
  */
 ```
 
-### <span id="data-tool-array"><font>\_$\_.toolUtil.isArray(data)</font></span>
+<a name="data-tool-array"></a>
+### \_$\_.toolUtil.isArray(data)
 ```
 /**
  * 判断数据类型是否为array数据类型
@@ -227,7 +236,8 @@
  */
 ```
 
-### <span id="data-tool-length"><font>\_$\_.toolUtil.getJsonArrLength(data)</font></span>
+<a name="data-tool-length"></a>
+### \_$\_.toolUtil.getJsonArrLength(data)
 ```
 /**
  * 返回array||json键长度（个数）
@@ -238,7 +248,8 @@
  */
 ```
 
-### <span id="data-tool-copy"><font>\_$\_.toolUtil.deepCopy(obj)</font></span>
+<a name="data-tool-copy"></a>
+### \_$\_.toolUtil.deepCopy(obj)
 ```
 /**
  * 对象深度拷贝【原始数据不产生变化】
@@ -249,7 +260,8 @@
  */
 ```
 
-### <span id="data-tool-compare"><font>\_$\_.toolUtil.compare(data1, data2)</font></span>
+<a name="data-tool-compare"></a>
+### \_$\_.toolUtil.compare(data1, data2)
 ```
 /**
  * 数据比较是否相等【此处不进行引用类型地址比较】
@@ -261,7 +273,8 @@
  */
 ```
 
-### <span id="data-tool-contain"><font>\_$\_.toolUtil.isContain(config)</font></span>
+<a name="data-tool-contain"></a>
+### \_$\_.toolUtil.isContain(config)
 ```
 /**
  * 判断指定key或者value是否位于对象中]
@@ -281,7 +294,8 @@
  */
 ```
 
-### <span id="data-tool-log"><font>\_$\_.toolUtil_.logInfo(type, info)</font></span>
+<a name="data-tool-log"></a>
+### \_$\_.toolUtil_.logInfo(type, info)
 ```
 /**
  * 打印日志信息
