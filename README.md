@@ -1,8 +1,7 @@
 # jsonQuery.js
-[queryNodes：节点查询](#data-query-nodes)
+
 ### 对象数据查询相关方法
 <ul>
-    <li>[queryNodes：节点查询](#data-query-nodes)</li>
     <li><a href="#data-query-nodes" target="_self">queryNodes：节点查询</a></li>
     <li><a href="#data-query-parents" target="_self">queryParents：父节点查询</a></li>
     <li><a href="#data-query-siblings" target="_self">querySiblings：兄弟节点查询</a></li>
@@ -33,8 +32,8 @@
 
 ## 对象数据查询相关方法
 
-
-### <span id="data-query-nodes"><font>\_$\_.queryNodes(config)</font></span>
+<span id="data-query-nodes"></span>
+### \_$\_.queryNodes(config)
 ```
 /**
  * 从对象数据中查找符合条件的节点对象集合
@@ -54,7 +53,7 @@
  */
 ```
 
-###   <span id="data-query-parents"><font>\_$\_.queryParents(config)</font></span>
+### <span id="data-query-parents"><font>\_$\_.queryParents(config)</font></span>
 ```
 /**
  * 查找父节点对象集合（注：查找到则中止后续查找）
