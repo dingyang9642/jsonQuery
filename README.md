@@ -1,6 +1,12 @@
 # jsonQuery.js
+
 ### 版本更新记录
 1.0.6 说明文档修改
+
+### 使用说明
+commonJs使用：import _$_ from 'jsonqueryjs/json'
+amd/cmd使用： define(['jsonqueryjs/json'], function(_$_) {} );
+script引用：<script src='node_modules/jsonqueryjs/json.js'></script>
 
 ### 对象数据查询相关方法
 <ul>
