@@ -483,19 +483,20 @@
 
         replace: function (config) {
             var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
-            if (compare) return config.target;
+            if (compare) return config.target.value;
             return this._replace(config, this.MODE_TYPE.STRICT);
         },
         replace2: function (config) {
             var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
-            if (compare) return config.target;
+            if (compare) return config.target.value;
             return this._replace(config, this.MODE_TYPE.CONTAIN);
         },
         _replace: function (config, modeType) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key,
-                      target = config.target;
+                      targetKey = config.target.key;
+                      targetValue = config.target.value;
             var isArrayData = this.toolUtil.isArray(json_arr_data),
                  isJsonData = this.toolUtil.isJson(json_arr_data),
                     results = [];
@@ -510,9 +511,9 @@
                 var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
                     if (isArrayData) {
-                        results.push(target);
+                        results.push(targetValue);
                     } else {
-                        results[key] = target;
+                        results[targetKey] = targetValue;
                     }
                     continue;
                 }
