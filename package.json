@@ -1,6 +1,6 @@
 {
   "name": "jsonqueryjs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "支持对象数据（json/array）数据的查找及格式化数据",
   "main": "json.js",
   "scripts": {
