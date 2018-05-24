@@ -32,7 +32,7 @@
 
 ## 对象数据查询相关方法
 
-<span id="data-query-nodes"></span>
+<span name="data-query-nodes"></span>
 ### \_$\_.queryNodes(config)
 ```
 /**
