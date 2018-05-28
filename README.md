@@ -281,8 +281,6 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
  */
 ```
 
-```
-
 <a name="data-tool-log"></a>
 ### \_$\_.toolUtil_.logInfo(type, info)
 ```
