@@ -1,6 +1,7 @@
 var qryResults = _$_.queryNodes({
 	key: 'a',
 	value: 2,
+	rule: '"a"=2',
     data: {
 		a: '1',
 		b: [{

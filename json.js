@@ -90,6 +90,20 @@
         },
 
         /**
+         * 打印日志信息
+         * @Author   dingyang
+         * @DateTime 2018-04-16
+         * @param    {string}   type                 error warn log三种日志信息类型
+         * @param    {string}   info                 日志信息
+         * @return   {void}                          无
+         */
+        logInfo: function (type, info) {
+            console.log('错误类型：' + (type || 'error'), '错误信息：'+ (info || 'error info'));
+        }
+    };
+    var _$_busi_ = {
+        toolUtil: _$_tool_,
+        /**
          * 判断指定key或者value是否位于对象中]
          * @Author   dingyang
          * @example 几种条件的示例设置
@@ -105,12 +119,12 @@
          * @param    {void}                           config.value   配置项-value
          * @return   {boolean}                                       如果命中条件，返回true，否则返回false
          */
-        isContain: function (config) {
+        isContain: function (config, inValidValue) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
-            var isArrayData = this.isArray(json_arr_data),
-                 isJsonData = this.isJson(json_arr_data);
+            var isArrayData = this.toolUtil.isArray(json_arr_data),
+                 isJsonData = this.toolUtil.isJson(json_arr_data);
             if (!isArrayData && !isJsonData) {
                 return false;
             }
@@ -118,67 +132,92 @@
             for (var key in json_arr_data) {
                 var compare = false;
                 var keyValue = json_arr_data[key];
-                if ((nodeKey || (nodeKey === 0)) && nodeValue) {
-                    compare = (this.compare(isQueryArray ? key * 1 : key, nodeKey) && this.compare(keyValue, nodeValue));
+                if (nodeKey !== inValidValue && nodeValue !== inValidValue) {
+                    compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
                 }
-                else if (nodeKey || (nodeKey === 0)) {
-                    compare = this.compare(isQueryArray ? key * 1 : key, nodeKey);
+                else if (nodeKey !== inValidValue) {
+                    compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
                 }
-                else if (nodeValue) {
-                    compare = this.compare(keyValue, nodeValue);
+                else if (nodeValue !== inValidValue) {
+                    compare = this.toolUtil.compare(keyValue, nodeValue);
                 }
                 if (compare) return true;
             }
             return false;
+        }
+    };
+    var _$_rule_ = {
+        _getRules: function (rule) {
+            var subRules = rule.split(',');
+            for (var i = 0; i < subRules.length; i++) {
+                var tmpSubRule = subRules[i];
+                tmpSubRule = tmpSubRule.replace(/^\s*|\s*$/g,"");
+                // 验证该子规则是否符合条件（只有一个）
+                var isValidRule = /\=/g.test(tmpSubRule) && !/\=\s*\=/g.test(tmpSubRule) && /[0-9a-zA-Z\_\u4e00-\u9fa5]+/g.test(tmpSubRule);
+                if (isValidRule) {
+                    console.log(tmpSubRule.split('=')[0] === '"a"');
+                } else {
+                    this.toolUtil.logInfo('warn', 'rule-analysis: ' + tmpSubRule + ' is invalid');
+                }
+            }
         },
-
-        /**
-         * 打印日志信息
-         * @Author   dingyang
-         * @DateTime 2018-04-16
-         * @param    {string}   type                 error warn log三种日志信息类型
-         * @param    {string}   info                 日志信息
-         * @return   {void}                          无
-         */
-        logInfo: function (type, info) {
-            console.log('错误类型：' + (type || 'error'), '错误信息：'+ (info || 'error info'));
+        // 对规则中的数据进行解析
+        formatData: function (key) {
+            // 首先判断其是不是字符串
+            if (/^'\w*'$/g.test(key) || /^"\w*"$/g.test(key)) {
+                return key.substring(1, key.length - 1);
+            } else {
+                try {
+                    return JSON.parse(key);
+                } catch(e) {
+                    if (key === '') {
+                        return ;
+                    }
+                    this.toolUtil.logInfo('error', 'rule-analysis: ' + key + ' is invalid');
+                }
+            }
         }
     };
     var _$_ = {
-    	toolUtil: _$_tool_,
+    	toolUtil: _$_tool_, // 工具库
+        ruleUtil: _$_rule_, // 规则解析
+        busiUtil: _$_busi_, // 公共业务模块
         // 判断模式
         MODE_TYPE: {
            STRICT: 'strict',
            CONTAIN: 'contain'
         },
+        inValidValue: 'ignore', // 用来标记是否为无效的值
         _filterCompare: function (modeType, key, keyValue, nodeKey, nodeValue) {
             var compare =  false;
             var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
             if(modeType === this.MODE_TYPE.CONTAIN) {
-                if ((nodeKey || (nodeKey === 0)) || nodeValue) {
-                    compare = this.toolUtil.isContain({
+                if (nodeKey !== this.inValidValue || nodeValue !== this.inValidValue) {
+                    compare = this.busiUtil.isContain({
                         key: nodeKey,
                         value: nodeValue,
                         data: keyValue
-                    });
+                    }, this.inValidValue);
                 }
                 return compare;
             }
             if (modeType === this.MODE_TYPE.STRICT) {
-                if ((nodeKey || (nodeKey === 0)) && nodeValue) {
+                if (nodeKey !== this.inValidValue && nodeValue !== this.inValidValue) {
                     compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
                 }
-                else if (nodeKey || (nodeKey === 0)) {
+                else if (nodeKey !== this.inValidValue) {
                     compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
                 }
-                else if (nodeValue) {
+                else if (nodeValue !== this.inValidValue) {
                     compare = this.toolUtil.compare(keyValue, nodeValue);
                 }
                 return compare;           
             }
             return compare;
         },
-
+        _getRules: function (rule) {
+            this.ruleUtil._getRules(rule);
+        },
         /**
          * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
          * @Author   dingyang
@@ -210,7 +249,7 @@
                     continue;
                 }
                 // 查找当前节点的父节点是否位于results结果中
-                var queryCurrentNodes = this.queryNodes({
+                var queryCurrentNodes = this._queryNodes({
                     key: nodeId,
                     value: tmpNodeParentId,
                     data: results
@@ -423,7 +462,6 @@
             return results;
         },
 
-
         /**
          * 删除兄弟节点
          * @Author   dingyang
@@ -558,6 +596,15 @@
             return results;
         },
 
+        queryNodes: function (params) {
+            var rules = params.rule;
+            if (rules) {
+                this._getRules(rules);
+            } else {
+               return this._queryNodes(params);
+            }
+        },
+
     	/**
     	 * 从对象数据中查找符合条件的节点对象集合
          * @Author   dingyang
@@ -574,7 +621,7 @@
          * @param    {void}                           config.value   配置项-value
          * @return   {array}                          符合条件的节点对象集合
          */
-        queryNodes: function (config) {
+        _queryNodes: function (config) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
