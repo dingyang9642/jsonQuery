@@ -4,6 +4,7 @@
 1.0.6  说明文档修改<br>
 ...<br>
 1.0.10 说明文档修改<br>
+1.0.11 删除支持批量删除，增加rule参数<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>
@@ -33,7 +34,6 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
     <li><a href="#data-tool-length" target="_self">getJsonArrLength：获取对象长度</a></li>
     <li><a href="#data-tool-copy" target="_self">deepCopy：对象深度拷贝</a></li>
     <li><a href="#data-tool-compare" target="_self">compare：两组数据比较，对象不进行地址比较</a></li>
-    <li><a href="#data-tool-contain" target="_self">isContain：判断对象中是否包含指定元素</a></li>
     <li><a href="#data-tool-log" target="_self">logInfo：日志信息控制台输出</a></li>
 </ul>
 
@@ -281,25 +281,6 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
  */
 ```
 
-<a name="data-tool-contain"></a>
-### \_$\_.toolUtil.isContain(config)
-```
-/**
- * 判断指定key或者value是否位于对象中]
- * @Author   dingyang
- * @example 几种条件的示例设置
- * var result = isContain({data: [1,2], key: null, value: 2});     如果data数据源是数组，则key代表下标（int类型）返回true
- * var result = isContain({data: [1,2], key: 1, value: 2});        返回true
- * var result = isContain({data: [1,2], key: 0, value: 2});        返回false
- * var result = isContain({data: {a:1, b:2}, key: b, value: 2});   如果data数据源是json，则key代表键值（string类型）返回false
- * var result = isContain({data: {a:1, b:2}, key: null, value: 2});返回true
- * @DateTime 2018-05-17
- * @param    {Object}                         config         配置项
- * @param    {string}                         config.data    配置项-数据源                          
- * @param    {(number|string|null|undefined)} config.key     配置项-key
- * @param    {void}                           config.value   配置项-value
- * @return   {boolean}                                       如果命中条件，返回true，否则返回false
- */
 ```
 
 <a name="data-tool-log"></a>

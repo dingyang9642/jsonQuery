@@ -1,4 +1,13 @@
 (function(global) {
+    // 配置变量
+    var _$_conf_ = {
+        // 判断模式
+        MODE_TYPE: {
+           STRICT: 'strict',
+           CONTAIN: 'contain'
+        },
+        inValidValue: 'ignore', // 用来标记是否为无效的值
+    };
     var _$_tool_ = {
 
     	/**
@@ -103,6 +112,7 @@
     };
     var _$_busi_ = {
         toolUtil: _$_tool_,
+        conf: _$_conf_,     // 配置对象
         /**
          * 判断指定key或者value是否位于对象中]
          * @Author   dingyang
@@ -119,7 +129,7 @@
          * @param    {void}                           config.value   配置项-value
          * @return   {boolean}                                       如果命中条件，返回true，否则返回false
          */
-        isContain: function (config, inValidValue) {
+        isContain: function (config) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -132,48 +142,88 @@
             for (var key in json_arr_data) {
                 var compare = false;
                 var keyValue = json_arr_data[key];
-                if (nodeKey !== inValidValue && nodeValue !== inValidValue) {
+                if (nodeKey !== this.conf.inValidValue && nodeValue !== this.conf.inValidValue) {
                     compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
                 }
-                else if (nodeKey !== inValidValue) {
+                else if (nodeKey !== this.conf.inValidValue) {
                     compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
                 }
-                else if (nodeValue !== inValidValue) {
+                else if (nodeValue !== this.conf.inValidValue) {
                     compare = this.toolUtil.compare(keyValue, nodeValue);
                 }
                 if (compare) return true;
             }
             return false;
-        }
+        },
+        _filterCompare: function (modeType, key, keyValue, nodeKey, nodeValue) {
+            var compare =  false;
+            var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
+            if(modeType === this.conf.MODE_TYPE.CONTAIN) {
+                if (nodeKey !== this.conf.inValidValue || nodeValue !== this.conf.inValidValue) {
+                    compare = this.isContain({
+                        key: nodeKey,
+                        value: nodeValue,
+                        data: keyValue
+                    });
+                }
+                return compare;
+            }
+            if (modeType === this.conf.MODE_TYPE.STRICT) {
+                if (nodeKey !== this.conf.inValidValue && nodeValue !== this.conf.inValidValue) {
+                    compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
+                }
+                else if (nodeKey !== this.conf.inValidValue) {
+                    compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
+                }
+                else if (nodeValue !== this.conf.inValidValue) {
+                    compare = this.toolUtil.compare(keyValue, nodeValue);
+                }
+                return compare;           
+            }
+            return compare;
+        },
     };
     var _$_rule_ = {
+        conf: _$_conf_,     // 配置对象
+        toolUtil: _$_tool_,
         _getRules: function (rule) {
             var subRules = rule.split(',');
+            var result = [];
             for (var i = 0; i < subRules.length; i++) {
                 var tmpSubRule = subRules[i];
                 tmpSubRule = tmpSubRule.replace(/^\s*|\s*$/g,"");
                 // 验证该子规则是否符合条件（只有一个）
                 var isValidRule = /\=/g.test(tmpSubRule) && !/\=\s*\=/g.test(tmpSubRule) && /[0-9a-zA-Z\_\u4e00-\u9fa5]+/g.test(tmpSubRule);
                 if (isValidRule) {
-                    console.log(tmpSubRule.split('=')[0] === '"a"');
+                    var tmpSubRuleKeyValue = tmpSubRule.split('='),
+                           tmpSubRuleValue = this._formatRule(tmpSubRuleKeyValue[1]),
+                             tmpSubRuleKey = this._formatRule(tmpSubRuleKeyValue[0]);
+                    if (tmpSubRuleValue.flag && tmpSubRuleKey.flag) {
+                        result.push({key: tmpSubRuleKey.data, value: tmpSubRuleValue.data});
+                    }
                 } else {
                     this.toolUtil.logInfo('warn', 'rule-analysis: ' + tmpSubRule + ' is invalid');
                 }
             }
+            return result;
         },
         // 对规则中的数据进行解析
-        formatData: function (key) {
+        _formatRule: function (key) {
             // 首先判断其是不是字符串
             if (/^'\w*'$/g.test(key) || /^"\w*"$/g.test(key)) {
-                return key.substring(1, key.length - 1);
+                return {flag: true, data: key.substring(1, key.length - 1)};
             } else {
                 try {
-                    return JSON.parse(key);
+                    return {flag: true, data: JSON.parse(key)};
                 } catch(e) {
                     if (key === '') {
-                        return ;
+                        return {flag: true, data: this.conf.inValidValue};
+                    } else if (key === 'undefined') {
+                        return {flag: true, data: undefined};
+                    } else {
+                        this.toolUtil.logInfo('error', 'rule-analysis: ' + key + ' is invalid');                        
+                        return {flag: false, data: ''};
                     }
-                    this.toolUtil.logInfo('error', 'rule-analysis: ' + key + ' is invalid');
                 }
             }
         }
@@ -182,41 +232,41 @@
     	toolUtil: _$_tool_, // 工具库
         ruleUtil: _$_rule_, // 规则解析
         busiUtil: _$_busi_, // 公共业务模块
-        // 判断模式
-        MODE_TYPE: {
-           STRICT: 'strict',
-           CONTAIN: 'contain'
-        },
-        inValidValue: 'ignore', // 用来标记是否为无效的值
-        _filterCompare: function (modeType, key, keyValue, nodeKey, nodeValue) {
-            var compare =  false;
-            var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
-            if(modeType === this.MODE_TYPE.CONTAIN) {
-                if (nodeKey !== this.inValidValue || nodeValue !== this.inValidValue) {
-                    compare = this.busiUtil.isContain({
-                        key: nodeKey,
-                        value: nodeValue,
-                        data: keyValue
-                    }, this.inValidValue);
+        conf: _$_conf_,     // 配置对象
+        /**
+         * [_transferBelt description]
+         * @Author   dingyang   [dingyang@baidu.com]
+         * @DateTime 2018-05-28
+         * @param    {[type]}   params               [description]
+         * @param    {[type]}   funcName             执行函数名
+         * @param    {[type]}   type                 'format' || 'query'
+         * @return   {[type]}                        [description]
+         */
+        _transferBelt: function (params, funcName, type) {
+            var rule = params.rule;
+            if (rule) {
+                var rules = this.ruleUtil._getRules(rule);
+                var result = type === 'format' ? params.data : [];
+                for (var i = 0; i < rules.length; i++) {
+                    if (type === 'format') {
+                        result = this[funcName]({
+                            data: result,
+                            key: rules[i]['key'],
+                            value: rules[i]['value']
+                        })
+                    }
+                    if (type === 'query') {
+                        result.push(this[funcName]({
+                            data: params.data,
+                            key: rules[i]['key'],
+                            value: rules[i]['value']
+                        }));
+                    }
                 }
-                return compare;
+                return result;
+            } else {
+                return this[funcName](params);
             }
-            if (modeType === this.MODE_TYPE.STRICT) {
-                if (nodeKey !== this.inValidValue && nodeValue !== this.inValidValue) {
-                    compare = (this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey) && this.toolUtil.compare(keyValue, nodeValue));
-                }
-                else if (nodeKey !== this.inValidValue) {
-                    compare = this.toolUtil.compare(isQueryArray ? key * 1 : key, nodeKey);
-                }
-                else if (nodeValue !== this.inValidValue) {
-                    compare = this.toolUtil.compare(keyValue, nodeValue);
-                }
-                return compare;           
-            }
-            return compare;
-        },
-        _getRules: function (rule) {
-            this.ruleUtil._getRules(rule);
         },
         /**
          * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
@@ -276,18 +326,18 @@
         },
 
         insertBefore: function (config) {
-            return this._insertBeforeOrAfter(config, 'before', this.MODE_TYPE.STRICT);
+            return this._insertBeforeOrAfter(config, 'before', this.conf.MODE_TYPE.STRICT);
         },
 
         insertAfter: function (config) {
-            return this._insertBeforeOrAfter(config, 'after', this.MODE_TYPE.STRICT);
+            return this._insertBeforeOrAfter(config, 'after', this.conf.MODE_TYPE.STRICT);
         },
         insertBefore2: function (config) {
-            return this._insertBeforeOrAfter(config, 'before', this.MODE_TYPE.CONTAIN);
+            return this._insertBeforeOrAfter(config, 'before', this.conf.MODE_TYPE.CONTAIN);
         },
 
         insertAfter2: function (config) {
-            return this._insertBeforeOrAfter(config, 'after', this.MODE_TYPE.CONTAIN);
+            return this._insertBeforeOrAfter(config, 'after', this.conf.MODE_TYPE.CONTAIN);
         },
 
         /**
@@ -328,7 +378,7 @@
             var results = isArrayData ? [] : {};
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
-                var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
+                var compare = this.busiUtil._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
                 if (compare && type === 'before') {
                     // 如果命中比对规则
                     if (isArrayData) {
@@ -366,49 +416,81 @@
             return results;
         },
 
-        delete: function (config) {
-            var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
+
+        delete: function (params) {
+            return this._transferBelt(params, '_delete', 'format');
+        },
+        _delete: function (config) {
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
             if (compare) return null;
-            return this._delete(config, this.MODE_TYPE.STRICT);
+            return this.__delete(config, this.conf.MODE_TYPE.STRICT);
         },
-        delete2: function (config) {
+
+        delete2: function (params) {
+            return this._transferBelt(params, '_delete2', 'format');
+        },
+        _delete2: function (config) {
             // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
             if (compare) return null;
-            return this._delete(config, this.MODE_TYPE.CONTAIN);
+            return this.__delete(config, this.conf.MODE_TYPE.CONTAIN);
         },
-        deleteAllSiblings: function (config) {
-            var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
+
+        deleteAllSiblings: function (params) {
+            return this._transferBelt(params, '_deleteAllSiblings', 'format');
+        },
+        _deleteAllSiblings: function (config) {
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
             if (compare) return config.data;
-            return this._deleteSiblings(config, this.MODE_TYPE.STRICT, 'all');
+            return this.__deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'all');
         },
-        deleteAllSiblings2: function (config) {
+
+        deleteAllSiblings2: function (params) {
+            return this._transferBelt(params, '_deleteAllSiblings2', 'format');
+        },
+        _deleteAllSiblings2: function (config) {
             // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
             if (compare) return config.data;
-            return this._deleteSiblings(config, this.MODE_TYPE.CONTAIN, 'all');
+            return this.__deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'all');
         },
-        deleteBeforeSiblings: function (config) {
-            var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
+
+        deleteBeforeSiblings: function (params) {
+            return this._transferBelt(params, '_deleteBeforeSiblings', 'format');
+        },
+        _deleteBeforeSiblings: function (config) {
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
             if (compare) return config.data;
-            return this._deleteSiblings(config, this.MODE_TYPE.STRICT, 'before');
+            return this.__deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'before');
         },
-        deleteBeforeSiblings2: function (config) {
+
+        deleteBeforeSiblings2: function (params) {
+            return this._transferBelt(params, '_deleteBeforeSiblings2', 'format');
+        },
+        _deleteBeforeSiblings2: function (config) {
             // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
             if (compare) return config.data;
-            return this._deleteSiblings(config, this.MODE_TYPE.CONTAIN, 'before');
+            return this.__deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'before');
         },
-        deleteAfterSiblings: function (config) {
-            var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
+
+        deleteAfterSiblings: function (params) {
+            return this._transferBelt(params, '_deleteAfterSiblings', 'format');
+        },
+        _deleteAfterSiblings: function (config) {
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
             if (compare) return config.data;
-            return this._deleteSiblings(config, this.MODE_TYPE.STRICT, 'after');
+            return this.__deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'after');
         },
-        deleteAfterSiblings2: function (config) {
+
+        deleteAfterSiblings2: function (params) {
+            return this._transferBelt(params, '_deleteAfterSiblings2', 'format');
+        },
+        _deleteAfterSiblings2: function (config) {
             // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
             if (compare) return config.data;
-            return this._deleteSiblings(config, this.MODE_TYPE.CONTAIN, 'after');
+            return this.__deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'after');
         },
 
         /**
@@ -427,7 +509,7 @@
          * @param    {string}                         modeType       配置模式（提供两种模式'strict'|'contain'）
          * @return   {object}                         返回新的对象集合
          */
-        _delete: function (config, modeType) {
+        __delete: function (config, modeType) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -442,7 +524,7 @@
             var results = isArrayData ? [] : {};
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
-                var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
+                var compare = this.busiUtil._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
                 if (compare) continue;
                 if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                     config.data = keyValue;
@@ -479,7 +561,7 @@
          * @param    {string}                         rule           删除规则（提供三种模式'before'|'after'|'all'）
          * @return   {object}                         返回新的对象集合
          */
-        _deleteSiblings: function (config, modeType, rule) {
+        __deleteSiblings: function (config, modeType, rule) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -494,7 +576,7 @@
             var results = isArrayData ? [] : {};
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
-                var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
+                var compare = this.busiUtil._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
                 if ((rule === 'before' || rule === 'all') && compare) {
                     results = isArrayData ? [] : {};
                 };
@@ -518,16 +600,15 @@
             return results;
         },
 
-
         replace: function (config) {
-            var compare = this._filterCompare(this.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
             if (compare) return config.target.value;
-            return this._replace(config, this.MODE_TYPE.STRICT);
+            return this._replace(config, this.conf.MODE_TYPE.STRICT);
         },
         replace2: function (config) {
-            var compare = this._filterCompare(this.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
+            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
             if (compare) return config.target.value;
-            return this._replace(config, this.MODE_TYPE.CONTAIN);
+            return this._replace(config, this.conf.MODE_TYPE.CONTAIN);
         },
 
         /**
@@ -567,7 +648,7 @@
             var results = isArrayData ? [] : {};
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
-                var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
+                var compare = this.busiUtil._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
                     if (isArrayData) {
                         results.push(targetValue);
@@ -597,12 +678,7 @@
         },
 
         queryNodes: function (params) {
-            var rules = params.rule;
-            if (rules) {
-                this._getRules(rules);
-            } else {
-               return this._queryNodes(params);
-            }
+            return this._transferBelt(params, '_queryNodes', 'query');
         },
 
     	/**
@@ -640,7 +716,7 @@
                     config.data = keyValue;
                     results = results.concat(arguments.callee.call(this, config));
                 }
-                var compare = this._filterCompare(this.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
+                var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
                     results.push(isQueryArray ? keyValue : json_arr_data);
                 }
@@ -649,6 +725,10 @@
             return results;
         },
 
+
+        queryParents: function (params) {
+            return this._transferBelt(params, '_queryParents', 'query');
+        },
         /**
          * 查找父节点对象集合（注：查找到则中止后续查找）
          * @Author   dingyang
@@ -663,7 +743,7 @@
          * @param    {void}                           config.value   配置项-value
          * @return   {array}                          符合条件的节点对象集合
          */
-        queryParents: function (config) {
+        _queryParents: function (config) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -678,7 +758,7 @@
             // 其次，如果数据是json格式数据{a:1, b:1} || [a, b]
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
-                var compare = this._filterCompare(this.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
+                var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
                     results.push(json_arr_data);
                     if (isArrayData) {
@@ -704,14 +784,14 @@
 
         querySiblings: function (config) {
             this.tmpSiblings = [];
-            this._querySiblings(config, this.MODE_TYPE.STRICT);
+            this._querySiblings(config, this.conf.MODE_TYPE.STRICT);
             var results = this.toolUtil.deepCopy(this.tmpSiblings);
             this.tmpSiblings = [];
             return results;
         },
         querySiblings2: function (config) {
             this.tmpSiblings = [];
-            this._querySiblings(config, this.MODE_TYPE.CONTAIN);
+            this._querySiblings(config, this.conf.MODE_TYPE.CONTAIN);
             var results = this.toolUtil.deepCopy(this.tmpSiblings);
             this.tmpSiblings = [];
             return results;
@@ -751,7 +831,7 @@
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
                 results.push(keyValue);
-                var compare = this._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
+                var compare = this.busiUtil._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
                     results.pop();
                 }

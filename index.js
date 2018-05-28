@@ -1,13 +1,12 @@
 var qryResults = _$_.queryNodes({
 	key: 'a',
 	value: 2,
-	rule: '"a"=2',
     data: {
 		a: '1',
 		b: [{
 			a: 2,
 			b: {
-				b:'2', 
+				b: null, 
 				c: '3'
 			},
 			c: '2'
@@ -24,7 +23,16 @@ var qryResults = _$_.queryNodes({
 });
 console.log('queryNodes查找结果：', qryResults);
 
-var qryResults2 = _$_.queryParents({data: {id:1,children:[{id:5}]}, key: 'id', value: 5});
+var qryResults2 = _$_.queryParents({
+	data: {
+		id:1,
+		children:[
+		    {id:5}
+		]
+	},
+	key: 'id', 
+    value: 5
+});
 console.log('queryParents查找结果：', qryResults2);
 
 var formatChildrenResult = _$_.formatChildren({
@@ -115,6 +123,7 @@ console.log('insertAfter结果：', insertAfter);
 var deleteNodes = _$_.delete2({
     key: null,
     value: 2,
+    rule: '"c"=2,"a"=2',
     data: [1, 3, 3, {a:4, b:{c:2}}, {a:2}]
 });
 console.log('deleteNodes结果：', deleteNodes);
