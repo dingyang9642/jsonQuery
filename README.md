@@ -5,6 +5,8 @@
 ...<br>
 1.0.10 说明文档修改<br>
 1.0.11 删除支持批量删除，增加rule参数<br>
+...<br>
+1.0.12 删除支持批量删除，增加rule参数<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>
@@ -138,8 +140,12 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
  * @Author   dingyang
  * @example 严格模式【严格同一级匹配】
  * var result = delete({data: [1,{a:2},[2]], key: null, value: 2});  返回 [1,{},[]]
+ * @example 严格模式【严格同一级匹配-批量删除】
+ * var result = delete({data: [1,{a:2,b:3},[2]], rule: "'a'=2,'b'=3"});  返回 [1,{},[2]]
  * @example 包含模式【对象包含查找条件模式】
  * var result = delete({data: [1,{a:2},[2]], key: null, value: 2}); 返回 [1]
+ * @example 包含模式【对象包含查找条件模式-批量删除】
+ * var result = delete({data: [1,{a:2},{b:3}], rule:"'a'=2,'b'3"}); 返回 [1]
  * 解释：数组中第2项{a;2},第3项[2]符合查找条件，因为此时是兼容模式,所以返回[1]
  * @DateTime 2018-04-24
  * @param    {Object}                         config         配置项
