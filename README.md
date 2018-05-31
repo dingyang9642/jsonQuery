@@ -7,6 +7,7 @@
 1.0.11 删除支持批量删除，增加rule参数<br>
 ...<br>
 1.0.12 删除支持批量删除，增加rule参数<br>
+1.0.13 replace方法支持json数据key的替换，而value值不变<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>

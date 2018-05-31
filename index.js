@@ -148,12 +148,12 @@ var deleteAllSiblings = _$_.deleteAllSiblings({
 });
 console.log('deleteAllSiblings结果：', deleteAllSiblings);
 
-var replace = _$_.replace2({
+var replace = _$_.replace({
     key: 'a',
     value: 4,
     target: {
-    	key: null,
-    	value: {s:4}
+    	key: 'dd',
+    	value: 'ignore'
     },
     data: [1, 2, {a:3, b:4, c:5}, 0, 1, {a:4, b:{a:4}}, {a:2}]
 });

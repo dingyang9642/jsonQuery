@@ -649,13 +649,16 @@
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
                 var compare = this.busiUtil._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
-                if (compare) {
-                    if (isArrayData) {
-                        results.push(targetValue);
-                    } else {
-                        results[targetKey] = targetValue;
-                    }
+                if (compare && isArrayData && targetValue !== this.conf.inValidValue) {
+                    results.push(targetValue);
                     continue;
+                } else if (compare && targetKey !== this.conf.inValidValue) {
+                    if (targetValue !== this.conf.inValidValue) {
+                        results[targetKey] = targetValue;
+                        continue;
+                    } else {
+                        key = targetKey;
+                    }
                 }
                 if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                     config.data = keyValue;
