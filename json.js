@@ -787,19 +787,77 @@
 
         querySiblings: function (config) {
             this.tmpSiblings = [];
-            this._querySiblings(config, this.conf.MODE_TYPE.STRICT);
+            this._querySiblings(config, 'all', this.conf.MODE_TYPE.STRICT);
             var results = this.toolUtil.deepCopy(this.tmpSiblings);
             this.tmpSiblings = [];
             return results;
         },
         querySiblings2: function (config) {
             this.tmpSiblings = [];
-            this._querySiblings(config, this.conf.MODE_TYPE.CONTAIN);
+            this._querySiblings(config, 'all', this.conf.MODE_TYPE.CONTAIN);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+        queryPreSiblings: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'preAll', this.conf.MODE_TYPE.STRICT);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+        queryPreSiblings2: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'preAll', this.conf.MODE_TYPE.CONTAIN);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+        queryAfterSiblings: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.STRICT);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+        queryAfterSiblings2: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.CONTAIN);
             var results = this.toolUtil.deepCopy(this.tmpSiblings);
             this.tmpSiblings = [];
             return results;
         },
 
+        queryPreSibling: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'pre', this.conf.MODE_TYPE.STRICT);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+        queryPreSibling2: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'pre', this.conf.MODE_TYPE.CONTAIN);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+
+        queryAfterSibling: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'after', this.conf.MODE_TYPE.STRICT);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+        queryAfterSibling2: function (config) {
+            this.tmpSiblings = [];
+            this._querySiblings(config, 'after', this.conf.MODE_TYPE.CONTAIN);
+            var results = this.toolUtil.deepCopy(this.tmpSiblings);
+            this.tmpSiblings = [];
+            return results;
+        },
+        
         /**
          * 查找兄弟节点对象集合
          * @Author   dingyang
@@ -817,7 +875,7 @@
          * @param    {string}                         modeType       配置模式（提供两种模式'strict'|'contain'）
          * @return   {array}                          符合条件的节点对象集合
          */
-        _querySiblings: function (config, modeType) {
+        _querySiblings: function (config, type, modeType) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -830,25 +888,42 @@
                 return results;
             }
             var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
+            var findFlag = false;
             // 其次，如果数据是json格式数据{a:1, b:1} || [a, b]
             for (var key in json_arr_data) {
                 var keyValue = json_arr_data[key];
                 results.push(keyValue);
                 var compare = this.busiUtil._filterCompare(modeType, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
+                    findFlag = true;
                     results.pop();
+                    results.push('|'); // 此处插入区分标记，区分前兄弟节点／后兄弟节点
                 }
                 else if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                     subData.push(keyValue);
                 }
             }
-            if ((this.toolUtil.getJsonArrLength(json_arr_data) - 1) === results.length) {
-                this.tmpSiblings.push(results);
+            if (findFlag) {
+                var newResults = [];
+                if (type === 'all') {
+                    newResults = results.filter(function (item) {
+                        return item !== '|'
+                    });
+                } else if (type === 'preAll') {
+                    newResults = results.slice(0, results.indexOf('|'));
+                } else if (type === 'afterAll') {
+                    newResults = results.slice(results.indexOf('|') + 1);
+                } else if (type === 'pre') {
+                    newResults = results.slice(results.indexOf('|') - 1, results.indexOf('|'));
+                } else if (type === 'after') {
+                    newResults = results.slice(results.indexOf('|') + 1, results.indexOf('|') + 2);
+                }
+                this.tmpSiblings.push(newResults);
             }
             if (subData.length) {
                 for (var i = 0; i < subData.length; i++) {
                     config.data = subData[i];
-                    arguments.callee.call(this, config, modeType);
+                    arguments.callee.call(this, config, type, modeType);
                 }
             }
         }
