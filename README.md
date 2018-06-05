@@ -10,6 +10,7 @@
 1.0.13 replace方法支持json数据key的替换，而value值不变<br>
 1.0.14 支持各种兄弟节点查找（当前节点前兄弟节点，当前节点后兄弟节点...）<br>
 1.0.15 兄弟节点查询 取消 数据深拷贝返回<br>
+1.0.16 深拷贝方法添加参数判断 如果不是对象直接返回null<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>

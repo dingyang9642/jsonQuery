@@ -55,6 +55,9 @@
          * @return   {object}                        拷贝后数据
          */
         deepCopy: function (obj) {
+            if (!this.isJson(obj) || !this.isArray(obj)) {
+                return null;
+            }
             var type = this.isJson(obj) ? {} : [];
             for (var key in obj) {
                 if(typeof obj[key]=='object') {
