@@ -9,6 +9,7 @@
 1.0.12 删除支持批量删除，增加rule参数<br>
 1.0.13 replace方法支持json数据key的替换，而value值不变<br>
 1.0.14 支持各种兄弟节点查找（当前节点前兄弟节点，当前节点后兄弟节点...）<br>
+1.0.15 兄弟节点查询 取消 数据深拷贝返回<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>

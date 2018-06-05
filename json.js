@@ -788,74 +788,54 @@
         querySiblings: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'all', this.conf.MODE_TYPE.STRICT);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         querySiblings2: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'all', this.conf.MODE_TYPE.CONTAIN);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         queryPreSiblings: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'preAll', this.conf.MODE_TYPE.STRICT);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         queryPreSiblings2: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'preAll', this.conf.MODE_TYPE.CONTAIN);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         queryAfterSiblings: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.STRICT);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         queryAfterSiblings2: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.CONTAIN);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
 
         queryPreSibling: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'pre', this.conf.MODE_TYPE.STRICT);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         queryPreSibling2: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'pre', this.conf.MODE_TYPE.CONTAIN);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
 
         queryAfterSibling: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'after', this.conf.MODE_TYPE.STRICT);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         queryAfterSibling2: function (config) {
             this.tmpSiblings = [];
             this._querySiblings(config, 'after', this.conf.MODE_TYPE.CONTAIN);
-            var results = this.toolUtil.deepCopy(this.tmpSiblings);
-            this.tmpSiblings = [];
-            return results;
+            return this.tmpSiblings;
         },
         
         /**
