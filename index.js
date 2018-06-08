@@ -106,7 +106,7 @@ var qrySiblings = _$_.querySiblings2({
 console.log('qrySiblings查找结果：', qrySiblings);
 
 
-var insertBefore = _$_.insertBefore2({data: [1,2,{a:2}], key: null, value: 2, target: {key: 'b', value: '3'}});
+var insertBefore = _$_.insertBefore2({data: [1,2,{a:2}], key: 'ignore', value: 2, target: {key: 'b', value: '3'}});
 console.log('insertBefore结果：', insertBefore);
 
 var insertAfter = _$_.insertAfter2({
@@ -121,7 +121,7 @@ var insertAfter = _$_.insertAfter2({
 console.log('insertAfter结果：', insertAfter);
 
 var deleteNodes = _$_.delete2({
-    key: null,
+    key: 'ignore',
     value: 2,
     rule: '"c"=2,"a"=2',
     data: [1, 3, 3, {a:4, b:{c:2}}, {a:2}]
@@ -129,20 +129,20 @@ var deleteNodes = _$_.delete2({
 console.log('deleteNodes结果：', deleteNodes);
 
 var deleteAfterSiblings = _$_.deleteAfterSiblings({
-    key: null,
+    key: 'ignore',
     value: 3,
     data: [1, 2, {a:3, b:4, c:5}, 0, 3, {a:4, b:{c:2}}, {a:2}]
 });
 console.log('deleteAfterSiblings结果：', deleteAfterSiblings);
 
 var deleteBeforeSiblings = _$_.deleteBeforeSiblings({
-    key: null,
+    key: 'ignore',
     value: 3,
     data: [1, 2, {a:3, b:4, c:5}, 0, 3, {a:4, b:{c:2}}, {a:2}]
 });
 console.log('deleteBeforeSiblings结果：', deleteBeforeSiblings);
 var deleteAllSiblings = _$_.deleteAllSiblings({
-    key: null,
+    key: 'ignore',
     value: 4,
     data: [1, 2, {a:3, b:4, c:5}, 0, 1, {a:4, b:{c:2}}, {a:2}]
 });

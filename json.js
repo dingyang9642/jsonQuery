@@ -8,6 +8,7 @@
         },
         inValidValue: 'ignore', // 用来标记是否为无效的值
     };
+    // 基本工具库
     var _$_tool_ = {
 
     	/**
@@ -113,6 +114,7 @@
             console.log('错误类型：' + (type || 'error'), '错误信息：'+ (info || 'error info'));
         }
     };
+    // 业务公共处理对象
     var _$_busi_ = {
         toolUtil: _$_tool_,
         conf: _$_conf_,     // 配置对象
@@ -186,6 +188,7 @@
             return compare;
         },
     };
+    // 规则层
     var _$_rule_ = {
         conf: _$_conf_,     // 配置对象
         toolUtil: _$_tool_,
@@ -231,46 +234,11 @@
             }
         }
     };
-    var _$_ = {
-    	toolUtil: _$_tool_, // 工具库
-        ruleUtil: _$_rule_, // 规则解析
+    // 核心方法
+    var _$_core_ = {
+        toolUtil: _$_tool_, // 工具库
         busiUtil: _$_busi_, // 公共业务模块
         conf: _$_conf_,     // 配置对象
-        /**
-         * [_transferBelt description]
-         * @Author   dingyang   [dingyang@baidu.com]
-         * @DateTime 2018-05-28
-         * @param    {[type]}   params               [description]
-         * @param    {[type]}   funcName             执行函数名
-         * @param    {[type]}   type                 'format' || 'query'
-         * @return   {[type]}                        [description]
-         */
-        _transferBelt: function (params, funcName, type) {
-            var rule = params.rule;
-            if (rule) {
-                var rules = this.ruleUtil._getRules(rule);
-                var result = type === 'format' ? params.data : [];
-                for (var i = 0; i < rules.length; i++) {
-                    if (type === 'format') {
-                        result = this[funcName]({
-                            data: result,
-                            key: rules[i]['key'],
-                            value: rules[i]['value']
-                        })
-                    }
-                    if (type === 'query') {
-                        result.push(this[funcName]({
-                            data: params.data,
-                            key: rules[i]['key'],
-                            value: rules[i]['value']
-                        }));
-                    }
-                }
-                return result;
-            } else {
-                return this[funcName](params);
-            }
-        },
         /**
          * 格式化方法[{id:,parentId:}, {id:,parentId:}] => [{id:,childern:[{}]}]
          * @Author   dingyang
@@ -284,9 +252,6 @@
          * @param    {(number|string)}                  config.id       配置项-value
          * @return   {object}                           格式化之后的数据格式
          */
-        formatChildren: function (config) {
-            return this._formatChildren(config, []);
-        },
         _formatChildren: function (config, arr) {
             var jsonArr_data = config.data,
                 nodeParentId = config.parentId,
@@ -326,21 +291,6 @@
             }
             config.data = tmpResult;
             return arguments.callee.call(this, config, results);
-        },
-
-        insertBefore: function (config) {
-            return this._insertBeforeOrAfter(config, 'before', this.conf.MODE_TYPE.STRICT);
-        },
-
-        insertAfter: function (config) {
-            return this._insertBeforeOrAfter(config, 'after', this.conf.MODE_TYPE.STRICT);
-        },
-        insertBefore2: function (config) {
-            return this._insertBeforeOrAfter(config, 'before', this.conf.MODE_TYPE.CONTAIN);
-        },
-
-        insertAfter2: function (config) {
-            return this._insertBeforeOrAfter(config, 'after', this.conf.MODE_TYPE.CONTAIN);
         },
 
         /**
@@ -419,83 +369,6 @@
             return results;
         },
 
-
-        delete: function (params) {
-            return this._transferBelt(params, '_delete', 'format');
-        },
-        _delete: function (config) {
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
-            if (compare) return null;
-            return this.__delete(config, this.conf.MODE_TYPE.STRICT);
-        },
-
-        delete2: function (params) {
-            return this._transferBelt(params, '_delete2', 'format');
-        },
-        _delete2: function (config) {
-            // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
-            if (compare) return null;
-            return this.__delete(config, this.conf.MODE_TYPE.CONTAIN);
-        },
-
-        deleteAllSiblings: function (params) {
-            return this._transferBelt(params, '_deleteAllSiblings', 'format');
-        },
-        _deleteAllSiblings: function (config) {
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
-            if (compare) return config.data;
-            return this.__deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'all');
-        },
-
-        deleteAllSiblings2: function (params) {
-            return this._transferBelt(params, '_deleteAllSiblings2', 'format');
-        },
-        _deleteAllSiblings2: function (config) {
-            // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
-            if (compare) return config.data;
-            return this.__deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'all');
-        },
-
-        deleteBeforeSiblings: function (params) {
-            return this._transferBelt(params, '_deleteBeforeSiblings', 'format');
-        },
-        _deleteBeforeSiblings: function (config) {
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
-            if (compare) return config.data;
-            return this.__deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'before');
-        },
-
-        deleteBeforeSiblings2: function (params) {
-            return this._transferBelt(params, '_deleteBeforeSiblings2', 'format');
-        },
-        _deleteBeforeSiblings2: function (config) {
-            // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
-            if (compare) return config.data;
-            return this.__deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'before');
-        },
-
-        deleteAfterSiblings: function (params) {
-            return this._transferBelt(params, '_deleteAfterSiblings', 'format');
-        },
-        _deleteAfterSiblings: function (config) {
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
-            if (compare) return config.data;
-            return this.__deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'after');
-        },
-
-        deleteAfterSiblings2: function (params) {
-            return this._transferBelt(params, '_deleteAfterSiblings2', 'format');
-        },
-        _deleteAfterSiblings2: function (config) {
-            // 首先判断自身是否满足条件，如果满足条件直接返回null
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
-            if (compare) return config.data;
-            return this.__deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'after');
-        },
-
         /**
          * 节点对象删除
          * @Author   dingyang
@@ -512,6 +385,11 @@
          * @param    {string}                         modeType       配置模式（提供两种模式'strict'|'contain'）
          * @return   {object}                         返回新的对象集合
          */
+        _delete: function (config, modeType) {
+            var compare = this.busiUtil._filterCompare(modeType, null, config.data, config.key, config.value);
+            if (compare) return null;
+            return this.__delete(config, modeType);
+        },
         __delete: function (config, modeType) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
@@ -564,6 +442,11 @@
          * @param    {string}                         rule           删除规则（提供三种模式'before'|'after'|'all'）
          * @return   {object}                         返回新的对象集合
          */
+        _deleteSiblings: function (config, modeType, rule) {
+            var compare = this.busiUtil._filterCompare(modeType, null, config.data, config.key, config.value);
+            if (compare) return config.data;
+            return this.__deleteSiblings(config, modeType, rule);   
+        },
         __deleteSiblings: function (config, modeType, rule) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
@@ -603,17 +486,6 @@
             return results;
         },
 
-        replace: function (config) {
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, null, config.data, config.key, config.value);
-            if (compare) return config.target.value;
-            return this._replace(config, this.conf.MODE_TYPE.STRICT);
-        },
-        replace2: function (config) {
-            var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.CONTAIN, null, config.data, config.key, config.value);
-            if (compare) return config.target.value;
-            return this._replace(config, this.conf.MODE_TYPE.CONTAIN);
-        },
-
         /**
          * 指定位置节点替换
          * @Author   dingyang
@@ -635,6 +507,11 @@
          * @return   {object}                         返回新的对象集合
          */
         _replace: function (config, modeType) {
+            var compare = this.busiUtil._filterCompare(modeType, null, config.data, config.key, config.value);
+            if (compare) return config.target.value;
+            return this.__replace(config, modeType);
+        },
+        __replace: function (config, modeType) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key,
@@ -677,18 +554,12 @@
                         results[key] = keyValue;
                     }
                 }
-                
-
             }
             return results;
         },
 
-        queryNodes: function (params) {
-            return this._transferBelt(params, '_queryNodes', 'query');
-        },
-
-    	/**
-    	 * 从对象数据中查找符合条件的节点对象集合
+        /**
+         * 从对象数据中查找符合条件的节点对象集合
          * @Author   dingyang
          * @example 示例
          * var result = queryNodes({data: [1,2,{a:2}], key: null, value: 2}); 此处有两处符合条件，返回[[1,2],{a:2}]
@@ -731,10 +602,6 @@
             return results;
         },
 
-
-        queryParents: function (params) {
-            return this._transferBelt(params, '_queryParents', 'query');
-        },
         /**
          * 查找父节点对象集合（注：查找到则中止后续查找）
          * @Author   dingyang
@@ -788,59 +655,6 @@
             return results;
         },
 
-        querySiblings: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'all', this.conf.MODE_TYPE.STRICT);
-            return this.tmpSiblings;
-        },
-        querySiblings2: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'all', this.conf.MODE_TYPE.CONTAIN);
-            return this.tmpSiblings;
-        },
-        queryPreSiblings: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'preAll', this.conf.MODE_TYPE.STRICT);
-            return this.tmpSiblings;
-        },
-        queryPreSiblings2: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'preAll', this.conf.MODE_TYPE.CONTAIN);
-            return this.tmpSiblings;
-        },
-        queryAfterSiblings: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.STRICT);
-            return this.tmpSiblings;
-        },
-        queryAfterSiblings2: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.CONTAIN);
-            return this.tmpSiblings;
-        },
-
-        queryPreSibling: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'pre', this.conf.MODE_TYPE.STRICT);
-            return this.tmpSiblings;
-        },
-        queryPreSibling2: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'pre', this.conf.MODE_TYPE.CONTAIN);
-            return this.tmpSiblings;
-        },
-
-        queryAfterSibling: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'after', this.conf.MODE_TYPE.STRICT);
-            return this.tmpSiblings;
-        },
-        queryAfterSibling2: function (config) {
-            this.tmpSiblings = [];
-            this._querySiblings(config, 'after', this.conf.MODE_TYPE.CONTAIN);
-            return this.tmpSiblings;
-        },
-        
         /**
          * 查找兄弟节点对象集合
          * @Author   dingyang
@@ -859,6 +673,11 @@
          * @return   {array}                          符合条件的节点对象集合
          */
         _querySiblings: function (config, type, modeType) {
+            this.tmpSiblings = [];
+            this.__querySiblings(config, type, modeType);
+            return  this.tmpSiblings;
+        },
+        __querySiblings: function (config, type, modeType) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -909,6 +728,146 @@
                     arguments.callee.call(this, config, type, modeType);
                 }
             }
+        }
+    };
+    // 统一暴露层
+    var _$_ = {
+    	conf: _$_conf_,     // 配置对象
+        ruleUtil: _$_rule_, // 规则解析
+        busiUtil: _$_busi_, // 公共业务模块
+        core: _$_core_,     // 核心对象
+        /**
+         * 用来进行规则拦截处理分发
+         * @Author   dingyang   [dingyang@baidu.com]
+         * @DateTime 2018-05-28
+         * @param    {[type]}   params               [description]
+         * @param    {[type]}   funcName             执行函数名
+         * @param    {[type]}   type                 'format' || 'query'
+         * @return   {[type]}                        [description]
+         */
+        _transferBelt: function (params, funcName, type) {
+            var rule = params.rule;
+            if (rule) {
+                var rules = this.ruleUtil._getRules(rule);
+                var result = type === 'format' ? params.data : [];
+                for (var i = 0; i < rules.length; i++) {
+                    if (type === 'format') {
+                        result = this[funcName]({
+                            data: result,
+                            key: rules[i]['key'],
+                            value: rules[i]['value']
+                        })
+                    }
+                    if (type === 'query') {
+                        result.push(this[funcName]({
+                            data: params.data,
+                            key: rules[i]['key'],
+                            value: rules[i]['value']
+                        }));
+                    }
+                }
+                return result;
+            } else {
+                return this[funcName](params);
+            }
+        },
+
+        formatChildren: function (config) {
+            return this.core._formatChildren(config, []);
+        },
+
+        insertBefore: function (config) {
+            return this.core._insertBeforeOrAfter(config, 'before', this.conf.MODE_TYPE.STRICT);
+        },
+
+        insertAfter: function (config) {
+            return this.core._insertBeforeOrAfter(config, 'after', this.conf.MODE_TYPE.STRICT);
+        },
+        insertBefore2: function (config) {
+            return this.core._insertBeforeOrAfter(config, 'before', this.conf.MODE_TYPE.CONTAIN);
+        },
+
+        insertAfter2: function (config) {
+            return this.core._insertBeforeOrAfter(config, 'after', this.conf.MODE_TYPE.CONTAIN);
+        },
+
+        delete: function (config) {
+            return this._transferBelt(config, '_delete', 'format');
+        },
+        _delete: function (config) {
+            return this.core._delete(config, this.conf.MODE_TYPE.STRICT);
+        },
+
+        delete2: function (config) {
+            return this._transferBelt(config, '_delete2', 'format');
+        },
+        _delete2: function (config) {
+            return this.core._delete(config, this.conf.MODE_TYPE.CONTAIN);
+        },
+
+        deleteAllSiblings: function (config) {
+            return this.core._deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'all');
+        },
+        deleteAllSiblings2: function (config) {
+            return this.core._deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'all');
+        },
+        deleteBeforeSiblings: function (config) {
+            return this.core._deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'before');
+        },
+        deleteBeforeSiblings2: function (config) {
+            return this.core._deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'before');
+        },
+        deleteAfterSiblings: function (config) {
+            return this.core._deleteSiblings(config, this.conf.MODE_TYPE.STRICT, 'after');
+        },
+        deleteAfterSiblings2: function (config) {
+            return this.core._deleteSiblings(config, this.conf.MODE_TYPE.CONTAIN, 'after');
+        },
+
+        replace: function (config) {
+            return this.core._replace(config, this.conf.MODE_TYPE.STRICT);
+        },
+        replace2: function (config) {
+            return this.core._replace(config, this.conf.MODE_TYPE.CONTAIN);
+        },
+
+        queryNodes: function (config) {
+            return this.core._queryNodes(config);
+        },
+
+        queryParents: function (config) {
+            return this.core._queryParents(config);
+        },
+
+        querySiblings: function (config) {
+            return this.core._querySiblings(config, 'all', this.conf.MODE_TYPE.STRICT);
+        },
+        querySiblings2: function (config) {
+            return this.core._querySiblings(config, 'all', this.conf.MODE_TYPE.CONTAIN);
+        },
+        queryPreSiblings: function (config) {
+            return this.core._querySiblings(config, 'preAll', this.conf.MODE_TYPE.STRICT);
+        },
+        queryPreSiblings2: function (config) {
+            return this.core._querySiblings(config, 'preAll', this.conf.MODE_TYPE.CONTAIN);
+        },
+        queryAfterSiblings: function (config) {
+            return this.core._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.STRICT);
+        },
+        queryAfterSiblings2: function (config) {
+            return this.core._querySiblings(config, 'afterAll', this.conf.MODE_TYPE.CONTAIN);
+        },
+        queryPreSibling: function (config) {
+            return this.core._querySiblings(config, 'pre', this.conf.MODE_TYPE.STRICT);
+        },
+        queryPreSibling2: function (config) {
+            return this.core._querySiblings(config, 'pre', this.conf.MODE_TYPE.CONTAIN);
+        },
+        queryAfterSibling: function (config) {
+            return this.core._querySiblings(config, 'after', this.conf.MODE_TYPE.STRICT);
+        },
+        queryAfterSibling2: function (config) {
+            return this.core._querySiblings(config, 'after', this.conf.MODE_TYPE.CONTAIN);
         }
     };
     //兼容CommonJs规范   
