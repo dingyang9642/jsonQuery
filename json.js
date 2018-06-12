@@ -734,6 +734,7 @@
     var _$_ = {
     	conf: _$_conf_,     // 配置对象
         ruleUtil: _$_rule_, // 规则解析
+        toolUtil: _$_tool_, // 基本工具库（暂时暴露）
         busiUtil: _$_busi_, // 公共业务模块
         core: _$_core_,     // 核心对象
         /**

@@ -14,6 +14,7 @@
 ...<br>
 1.0.17 深拷贝方法添加参数判断 如果不是对象直接返回null<br>
 1.0.18 代码核心重新架构-向上兼容，不影响使用<br>
+1.0.19 重新外露toolUtil对象方法<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>
