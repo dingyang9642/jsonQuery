@@ -28,10 +28,16 @@ var qryResults2 = _$_.queryParents({
 		id:1,
 		children:[
 		    {id:5}
-		]
+		],
+		test: {
+			id:7,
+			name: {
+				id: 7
+			}
+		}
 	},
 	key: 'id', 
-    value: 5
+    value: 8
 });
 console.log('queryParents查找结果：', qryResults2);
 

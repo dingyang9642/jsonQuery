@@ -617,6 +617,16 @@
          * @return   {array}                          符合条件的节点对象集合
          */
         _queryParents: function (config) {
+            var results = [];
+            var originData = config.data;
+            var invalidNodes = this._queryNodes(config);
+            for (var i = 0; i < invalidNodes.length; i++) {
+                config.data = originData;
+                results.push(this.__queryParents(config, 0, i));
+            }
+            return results;
+        },
+        __queryParents: function (config, cIndex, index) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -633,15 +643,18 @@
                 var keyValue = json_arr_data[key];
                 var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
-                    results.push(json_arr_data);
-                    if (isArrayData) {
-                        results.push(keyValue);
+                    if (cIndex === index) {
+                        // 说明找到当前指定索引位置的元素
+                        results.push(json_arr_data);
+                        break;
+                    } else {
+                        // 说明当前匹配的元素不是指定索引的元素，进行计数+1
+                        cIndex++;
                     }
-                    break;
                 }
-                else if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
+                if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                     config.data = keyValue;
-                    var tmpResults =  arguments.callee.call(this, config);
+                    var tmpResults =  arguments.callee.call(this, config, cIndex, index);
                     if (tmpResults.length) {
                         results = [json_arr_data].concat(tmpResults);
                     } else {
@@ -872,7 +885,7 @@
         }
     };
     //兼容CommonJs规范   
-    if (typeof module !== 'undefined' && module.exports) {  
+    if (typeof module !== 'undefined' && module.exports) {
         module.exports = _$_;  
     };  
     //兼容AMD/CMD规范  
