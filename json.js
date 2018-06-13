@@ -603,12 +603,11 @@
         },
 
         /**
-         * 查找父节点对象集合（注：查找到则中止后续查找）
+         * 查找父节点对象集合,返回二维数组
          * @Author   dingyang
          * @example 示例
-         * var result = queryParents({data: [1,2,{a:2}], key: null, value: 2}); 数组中第二个2符合条件，直接返回[[1,2,{a:2}], 2]
-         * var result = queryParents({data: [1,2,{a:3}], key: 'a', value: 3});  返回[[1,2,{a:3}], {a:3}]
-         * var result = queryParents({data: {id:1,children:[{id:5}]}, key: 'id', value: 5}); 返回[{id:1,children:[{id:5}]}, [{id:5}], {id:5}]]
+         * var result = queryParents({data: {a:{c1:3},b:{c1:3}}, key: 'c1', value: 3}); 
+         * 返回[[{a:{c1:1},b:{c1:3}}, {c1:3}],   [{a:{c1:1},b:{c1:3}}, {c1:3}]]
          * @DateTime 2018-04-24
          * @param    {Object}                         config         配置项
          * @param    {string}                         config.data    配置项-数据源                          
@@ -622,11 +621,12 @@
             var invalidNodes = this._queryNodes(config);
             for (var i = 0; i < invalidNodes.length; i++) {
                 config.data = originData;
-                results.push(this.__queryParents(config, 0, i));
+                this.cIndex = 0;
+                results.push(this.__queryParents(config, i));
             }
             return results;
         },
-        __queryParents: function (config, cIndex, index) {
+        __queryParents: function (config, index) {
             var json_arr_data = config.data,
                     nodeValue = config.value,
                       nodeKey = config.key;
@@ -643,20 +643,21 @@
                 var keyValue = json_arr_data[key];
                 var compare = this.busiUtil._filterCompare(this.conf.MODE_TYPE.STRICT, key, keyValue, nodeKey, nodeValue);
                 if (compare) {
-                    if (cIndex === index) {
+                    if (this.cIndex === index) {
                         // 说明找到当前指定索引位置的元素
                         results.push(json_arr_data);
                         break;
                     } else {
                         // 说明当前匹配的元素不是指定索引的元素，进行计数+1
-                        cIndex++;
+                        this.cIndex = this.cIndex + 1;
                     }
                 }
-                if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
+                else if (this.toolUtil.isArray(keyValue) || this.toolUtil.isJson(keyValue)) {
                     config.data = keyValue;
-                    var tmpResults =  arguments.callee.call(this, config, cIndex, index);
+                    var tmpResults =  arguments.callee.call(this, config, index);
                     if (tmpResults.length) {
                         results = [json_arr_data].concat(tmpResults);
+                        break;
                     } else {
                         continue;
                     }
@@ -664,6 +665,46 @@
                 else {
                     continue;
                 }
+            }
+            return results;
+        },
+
+        /**
+         * 查找指定条件的父节点要素，类似queryParents，但不同于queryParents,返回结果要么0个要么1个
+         * @Author   dingyang
+         * @example 示例
+         * var result = queryClosest({data: [1,2,{a:2,b:{a:5}}], key: 'a', value: 5, target: {key: 'a', value: 2}}); 
+         * 返回[[{a:2,b:{a:5}}]]
+         * @DateTime 2018-04-24
+         * @param    {Object}                         config         配置项
+         * @param    {string}                         config.data    配置项-数据源                          
+         * @param    {(number|string|null|undefined)} config.key     配置项-key
+         * @param    {void}                           config.value   配置项-value
+         * @param    {object}                         config.target  配置项-target
+         * @param    {(number|string|null|undefined)} target.key     配置项target-key
+         * @param    {void}                           target.value   配置项target-value
+         * @return   {array}                          符合条件的节点对象集合
+         */
+        _queryClosest: function (config) {
+            var queryParents = this._queryParents(config);
+            if (!queryParents.length) return [];
+            var closestTarget = config.target;
+            var results = [];
+            for (var i = 0; i < queryParents.length; i++) {
+                var tmpResult = [];
+                for (var j = (queryParents[i].length - 1); j >=0 ; j--) {
+                    var cNode = queryParents[i][j];
+                    var compare = this.busiUtil.isContain({
+                        data: cNode,
+                        key: closestTarget.key,
+                        value: closestTarget.value
+                    })
+                    if (compare) {
+                        tmpResult.push(cNode);
+                        break;
+                    }
+                }
+                results.push(tmpResult);
             }
             return results;
         },
@@ -851,6 +892,10 @@
 
         queryParents: function (config) {
             return this.core._queryParents(config);
+        },
+
+        queryClosest: function (config) {
+            return this.core._queryClosest(config);
         },
 
         querySiblings: function (config) {

@@ -15,6 +15,7 @@
 1.0.17 深拷贝方法添加参数判断 如果不是对象直接返回null<br>
 1.0.18 代码核心重新架构-向上兼容，不影响使用<br>
 1.0.19 重新外露toolUtil对象方法<br>
+1.0.20 更新queryParents方法，添加queryClosest方法<br>
 
 ### 使用说明
 commonJs使用：import \_$\_ from 'jsonqueryjs/json'<br>
@@ -25,6 +26,7 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
 <ul>
     <li><a href="#data-query-nodes" target="_self">queryNodes：节点查询</a></li>
     <li><a href="#data-query-parents" target="_self">queryParents：父节点查询</a></li>
+    <li><a href="#data-query-closes" target="_self">queryClosest：查找最近的复合指定条件的祖先元素</a></li>
     <li><a href="#data-query-siblings" target="_self">querySiblings：兄弟节点查询</a></li>
 </ul>
 
@@ -76,12 +78,11 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
 ### \_$\_.queryParents(config)
 ```
 /**
- * 查找父节点对象集合（注：查找到则中止后续查找）
+ * 查找父节点对象集合,返回二维数组
  * @Author   dingyang
  * @example 示例
- * var result = queryParents({data: [1,2,{a:2}], key: null, value: 2}); 数组中第二个2符合条件，直接返回[[1,2,{a:2}], 2]
- * var result = queryParents({data: [1,2,{a:3}], key: 'a', value: 3});  返回[[1,2,{a:3}], {a:3}]
- * var result = queryParents({data: {id:1,children:[{id:5}]}, key: 'id', value: 5}); 返回[{id:1,children:[{id:5}]}, [{id:5}], {id:5}]]
+ * var result = queryParents({data: {a:{c1:3},b:{c1:3}}, key: 'c1', value: 3}); 
+ * 返回[[{a:{c1:1},b:{c1:3}}, {c1:3}],   [{a:{c1:1},b:{c1:3}}, {c1:3}]]
  * @DateTime 2018-04-24
  * @param    {Object}                         config         配置项
  * @param    {string}                         config.data    配置项-数据源                          
@@ -90,6 +91,28 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
  * @return   {array}                          符合条件的节点对象集合
  */
 ```
+
+<a name="data-query-closest"></a>
+### \_$\_.queryClosest(config)
+```
+/**
+ * 查找指定条件的父节点要素，类似queryParents，但不同于queryParents,返回结果要么0个要么1个
+ * @Author   dingyang
+ * @example 示例
+ * var result = queryClosest({data: [1,2,{a:2,b:{a:5}}], key: 'a', value: 5, target: {key: 'a', value: 2}}); 
+ * 返回[[{a:2,b:{a:5}}]]
+ * @DateTime 2018-04-24
+ * @param    {Object}                         config         配置项
+ * @param    {string}                         config.data    配置项-数据源                          
+ * @param    {(number|string|null|undefined)} config.key     配置项-key
+ * @param    {void}                           config.value   配置项-value
+ * @param    {object}                         config.target  配置项-target
+ * @param    {(number|string|null|undefined)} target.key     配置项target-key
+ * @param    {void}                           target.value   配置项target-value
+ * @return   {array}                          符合条件的节点对象集合
+ */
+```
+
 <a name="data-query-siblings"></a>
 ### \_$\_.querySiblings(config)  |  \_$\_.querySiblings2(config) | \_$\_.queryPreSiblings(config)  |  \_$\_.queryPreSiblings2(config) | \_$\_.queryAfterSiblings(config)  |  \_$\_.queryAfterSiblings2(config) | \_$\_.queryPreSibling(config)  |  \_$\_.queryPreSibling2(config) | \_$\_.queryAfterSibling(config)  |  \_$\_.queryAfterSibling2(config)
 ```

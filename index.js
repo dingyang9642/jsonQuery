@@ -25,21 +25,52 @@ console.log('queryNodes查找结果：', qryResults);
 
 var qryResults2 = _$_.queryParents({
 	data: {
+		id: 1,
+		a: {
+			id: 6,
+			name: 'a',
+			c: {
+				id: 5
+			}
+		},
+		b: {
+			id: 5,
+			name: 'b'
+		}
+	},
+	key: 'id', 
+    value: 5
+});
+console.log('queryParents查找结果：', qryResults2);
+
+var queryClosest = _$_.queryClosest({
+	data: {
 		id:1,
 		children:[
-		    {id:5}
+		    {id:8}
 		],
 		test: {
 			id:7,
 			name: {
-				id: 7
+				a: {
+					id: 7,
+					text: {
+						id: 8
+					}
+				}
 			}
 		}
 	},
 	key: 'id', 
-    value: 8
+    value: 8,
+    target: {
+    	key: 'id',
+    	value: 7
+    }
 });
-console.log('queryParents查找结果：', qryResults2);
+console.log('queryClosest查找结果：', queryClosest);
+
+
 
 var formatChildrenResult = _$_.formatChildren({
 	id: 'id',
