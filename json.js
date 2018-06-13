@@ -793,7 +793,7 @@
         core: _$_core_,     // 核心对象
         /**
          * 用来进行规则拦截处理分发
-         * @Author   dingyang   [dingyang@baidu.com]
+         * @Author   dingyang
          * @DateTime 2018-05-28
          * @param    {[type]}   params               [description]
          * @param    {[type]}   funcName             执行函数名
