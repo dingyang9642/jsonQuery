@@ -26,7 +26,7 @@ script引用：\<script src='node_modules/jsonqueryjs/json.js'\>\<\/script\>
 <ul>
     <li><a href="#data-query-nodes" target="_self">queryNodes：节点查询</a></li>
     <li><a href="#data-query-parents" target="_self">queryParents：父节点查询</a></li>
-    <li><a href="#data-query-closes" target="_self">queryClosest：查找最近的复合指定条件的祖先元素</a></li>
+    <li><a href="#data-query-closest" target="_self">queryClosest：查找最近的复合指定条件的祖先元素</a></li>
     <li><a href="#data-query-siblings" target="_self">querySiblings：兄弟节点查询</a></li>
 </ul>
 
