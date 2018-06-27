@@ -2,7 +2,7 @@
   "name": "jsonqueryjs",
   "version": "2.0.0",
   "description": "支持对象数据（json/array）数据的查找及格式化数据",
-  "main": "json.js",
+  "main": "jsonQuery.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
