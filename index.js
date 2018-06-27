@@ -1,198 +1,46 @@
-var qryResults = _$_.queryNodes({
-	key: 'a',
-	value: 2,
-    data: {
-		a: '1',
-		b: [{
-			a: 2,
-			b: {
-				b: null, 
-				c: '3'
-			},
-			c: '2'
-		}],
-		c: {
-			a: '1',
-			b: '2',
-			d: {
-				a: '1'
-			},
-			e: [{a: 2}]
-		}
-	}
-});
-console.log('queryNodes查找结果：', qryResults);
-
-var qryResults2 = _$_.queryParents({
-	data: {
-		id: 1,
-		a: {
-			id: 6,
-			name: 'a',
-			c: {
-				id: 5
-			}
-		},
+var data = {
+	a: '1',
+	b: [{
+		a: 3,
 		b: {
-			id: 5,
-			name: 'b'
+			b: '2', 
+			c: '3'
 		}
-	},
-	key: 'id', 
-    value: 5
-});
-console.log('queryParents查找结果：', qryResults2);
+	}],
+	c: {
+		b: '2',
+		a: {
+			a: ['1','5']
+		},
+		e: [222, {a: 2}, '3', '5', {c:7}]
+	}
+};
+// 查找当前节点+删除
+// var findResults = jsonQuery(data).target('"b"="2"').find().val();
 
-var queryClosest = _$_.queryClosest({
-	data: {
-		id:1,
-		children:[
-		    {id:8}
-		],
-		test: {
-			id:7,
-			name: {
-				a: {
-					id: 7,
-					text: {
-						id: 8
-					}
-				}
-			}
-		}
-	},
-	key: 'id', 
-    value: 8,
-    target: {
-    	key: 'id',
-    	value: 7
-    }
-});
-console.log('queryClosest查找结果：', queryClosest);
+// 查找兄弟节点
+// var findResults = jsonQuery(data).target('1="3"').siblings('strict', 'all').val();
+
+// 查找父节点
+// var findResults = jsonQuery(data).target('1="3"').parents().val();
+
+// 查找指定标志父节点
+// var findResults = jsonQuery(data).target('1="3"').closest({key: 2, value: '5'}).val();
+
+// 元素替换
+// var findResults = jsonQuery(data).target('1="3","c"="3"').replace({key: 'test', value: 22222}, 'strict').val();
+
+// 元素插入
+// var findResults = jsonQuery(data).target('1="3","c"="3"').insert({key: 'test', value: 22222}, 'strict', 'before').val();
+
+// 兄弟节点元素删除
+var findResults = jsonQuery(data).target('2="3","c"="3"').deleteSiblings('strict', 'beforeAll').val();
 
 
-
-var formatChildrenResult = _$_.formatChildren({
-	id: 'id',
-	parentId: 'parentId',
-	data: [{
-        id: '11',
-        parentId: '1',
-        value: '北京'
-	}, {
-        id: '12',
-        parentId: '1',
-        value: '上海'
-	},{
-        id: '111',
-        parentId: '11',
-        value: '海淀区'
-	}, {
-        id: '1',
-        parentId: null,
-        value: '中国'
-	}, 
-	{
-        id: '21',
-        parentId: '2',
-        value: '纽约'
-	}, {
-        id: '22',
-        parentId: '2',
-        value: '休斯顿'
-	},{
-        id: '211',
-        parentId: '21',
-        value: '布鲁克林'
-	}, {
-        id: '2',
-        parentId: null,
-        value: '美国'
-	}]
-});
-console.log('formatChildren结果：', formatChildrenResult);
-
-var qrySiblings = _$_.querySiblings2({
-	key: 'id',
-	value: 2,
-	data: 
-	   [{
-		    id: 1,
-		    children: [{
-		    	id: 2
-		    }, {
-		    	id: 3,
-		    	name: 'test'
-		    }, {
-		    	id: 4,
-		    	name: 'test2'
-		    }]
-		}, {
-	        id: 11,
-	        children: [{
-	    	    id: 2,
-	    	    name: 'sss'
-	        }, {
-	    	    id: 33,
-	    	    children: [{
-	    		    id: 66
-	    	    }]
-	        }]
-	    }]
-});
-console.log('qrySiblings查找结果：', qrySiblings);
+console.log('findResults查找结果：', findResults);
 
 
-var insertBefore = _$_.insertBefore2({data: [1,2,{a:2}], key: 'ignore', value: 2, target: {key: 'b', value: '3'}});
-console.log('insertBefore结果：', insertBefore);
+console.log(jsonQuery.toolUtil);
 
-var insertAfter = _$_.insertAfter2({
-	key: 'a',
-	value: 2,
-    target: {
-        key: 'test',
-        value: 'sss'
-    },
-	data: [{a:2}]
-});
-console.log('insertAfter结果：', insertAfter);
 
-var deleteNodes = _$_.delete2({
-    key: 'ignore',
-    value: 2,
-    rule: '"c"=2,"a"=2',
-    data: [1, 3, 3, {a:4, b:{c:2}}, {a:2}]
-});
-console.log('deleteNodes结果：', deleteNodes);
-
-var deleteAfterSiblings = _$_.deleteAfterSiblings({
-    key: 'ignore',
-    value: 3,
-    data: [1, 2, {a:3, b:4, c:5}, 0, 3, {a:4, b:{c:2}}, {a:2}]
-});
-console.log('deleteAfterSiblings结果：', deleteAfterSiblings);
-
-var deleteBeforeSiblings = _$_.deleteBeforeSiblings({
-    key: 'ignore',
-    value: 3,
-    data: [1, 2, {a:3, b:4, c:5}, 0, 3, {a:4, b:{c:2}}, {a:2}]
-});
-console.log('deleteBeforeSiblings结果：', deleteBeforeSiblings);
-var deleteAllSiblings = _$_.deleteAllSiblings({
-    key: 'ignore',
-    value: 4,
-    data: [1, 2, {a:3, b:4, c:5}, 0, 1, {a:4, b:{c:2}}, {a:2}]
-});
-console.log('deleteAllSiblings结果：', deleteAllSiblings);
-
-var replace = _$_.replace({
-    key: 'a',
-    value: 4,
-    target: {
-    	key: 'dd',
-    	value: 'ignore'
-    },
-    data: [1, 2, {a:3, b:4, c:5}, 0, 1, {a:4, b:{a:4}}, {a:2}]
-});
-console.log('replace结果：', replace);
 
