@@ -80,6 +80,47 @@
         },
 
         /**
+         * 为数组中的json数据添加广度&深度索引值[{id:1,childs:[{id:2}]}] => [{id:1,xIndex: 0, yIndex:0, childs:[{id:2}]}]
+         * @Author   dingyang 
+         * @DateTime 2018-06-27
+         * @param    {[type]}   config               [description]
+         * @param    {[type]}   yindex               [description]
+         * @return   {[type]}                        [description]
+         */
+        formatIndex: function (config, yindex) {
+            var obj = config.data,
+                xKey = config.xKey || 'xIndex',
+                yKey = config.yKey || 'yIndex';
+            var isJson = this.isJson(obj);
+            var isArray = this.isArray(obj);
+            if (!isJson && !isArray) {
+                return obj;
+            }
+            var type = isJson ? {} : [];
+            var xIndex = 0;
+            for (var key in obj) {
+                var keyValue = obj[key];
+                if (typeof keyValue == 'object') {
+                    if (isArray && this.isJson(keyValue)) {
+                        keyValue[xKey] = xIndex;
+                        keyValue[yKey] = yindex;
+                    }
+                    if (this.isArray(keyValue)) {
+                        yindex++;
+                    }
+                    config.data = keyValue;
+                    type[key] =  arguments.callee.call(this, config, yindex);
+                } else {
+                    type[key] = keyValue;
+                }
+                if (isArray) {
+                    xIndex++;
+                }
+            }
+            return type;
+        },
+
+        /**
          * 数据比较是否相等【此处不进行引用类型地址比较】
          * @Author   dingyang
          * @DateTime 2018-04-24

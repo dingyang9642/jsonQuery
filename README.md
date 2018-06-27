@@ -2,6 +2,7 @@
 
 ### 版本更新记录
 2.0.0  整体设计模式进行更改
+2.0.1  添加formatIndex方法，为数组添加广度／深度索引值
 
 ### 使用说明
 commonJs使用：import jsonQuery from 'jsonqueryjs/jsonQuery'<br>
@@ -39,6 +40,7 @@ script引用：\<script src='node_modules/jsonqueryjs/jsonQuery.js'\>\<\/script\
     <li><a href="#data-tool-isinarray" target="_self">isInArray：判断是否位于数组中</a></li>
     <li><a href="#data-tool-length" target="_self">getJsonArrLength：获取对象长度</a></li>
     <li><a href="#data-tool-copy" target="_self">deepCopy：对象深度拷贝</a></li>
+    <li><a href="#data-tool-formatindex" target="_self">formatIndex：为数组添加广度／深度索引值</a></li>
     <li><a href="#data-tool-compare" target="_self">compare：两组数据比较，对象不进行地址比较</a></li>
     <li><a href="#data-tool-log" target="_self">logInfo：日志信息控制台输出</a></li>
 </ul>
@@ -263,6 +265,22 @@ modeType(匹配模式)，此处分为2类
     console.log(result) => 结果：[1, {a: 1}]  
 ```
 
+<a name="data-tool-formatindex"></a>
+### formatIndex(options, yIndex)
+```
+描述：为数组添加广度／深度索引值
+参数：options = {data: [a:1], xKey: 'xKey', yKey: 'yKey' }
+     options.data: 格式化数据
+     options.xKey: 广度索引key值
+     options.yKey: 深度索引key值
+     yIndex: 深度起始索引，一般为0，固定为0
+实例：
+     var result = jsonQuery.toolUtil.formatIndex({data: [{a: 'a', childs: [{a: 'a'}]}]}, 0);
+     console.log(result) => [{a: 'a', xIndex: 0, yIndex: 0, childs: [{a: 'a', xIndex: 0, yIndex: 1}]}]
+    
+```
+
+
 <a name="data-tool-compare"></a>
 ### compare(data1, data2)
 ```
@@ -279,9 +297,6 @@ modeType(匹配模式)，此处分为2类
 实例：
     jsonQuery.toolUtil.logInfo('error', 'msg error');
 ```
-
-
-
 
 
 

@@ -40,7 +40,57 @@ var findResults = jsonQuery(data).target('2="3","c"="3"').deleteSiblings('strict
 console.log('findResults查找结果：', findResults);
 
 
-console.log(jsonQuery.toolUtil);
+console.log(jsonQuery.toolUtil.formatIndex({
+	data: [{
+		x_index: 0,
+		y_index: 0,
+		childs: [{
+			x_index: 0,
+			y_index: 1,
+			childs: [{
+				x_index: 0,
+				y_index: 2
+			}, {
+				x_index: 1,
+				y_index: 2
+			}]
+		}, {
+			x_index: 1,
+			y_index: 1,
+			childs: [{
+				x_index: 0,
+				y_index: 2
+			}, {
+				x_index: 1,
+				y_index: 2
+			}]
+		}]
+	}, {
+		x_index: 1,
+		y_index: 0,
+		childs: [{
+			x_index: 0,
+			y_index: 1,
+			childs: [{
+				x_index: 0,
+				y_index: 2
+			}, {
+				x_index: 1,
+				y_index: 2
+			}]
+		}, {
+			x_index: 1,
+			y_index: 1,
+			childs: [{
+				x_index: 0,
+				y_index: 2
+			}, {
+				x_index: 1,
+				y_index: 2
+			}]
+		}]
+	}]
+}, 0));
 
 
 
