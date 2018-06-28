@@ -1,8 +1,9 @@
 # jsonQuery.js
 
 ### 版本更新记录
-2.0.0  整体设计模式进行更改
-2.0.1  添加formatIndex方法，为数组添加广度／深度索引值
+2.0.0  整体设计模式进行更改<br>
+2.0.1  添加formatIndex方法，为数组添加广度／深度索引值<br>
+2.0.2  closest方法返回值类型更改 arr->object 
 
 ### 使用说明
 commonJs使用：import jsonQuery from 'jsonqueryjs/jsonQuery'<br>
@@ -121,10 +122,10 @@ modeType(匹配模式)，此处分为2类
      var data = {a: 1, b: {a: 10, b: 11, c: 12, d: 13}};
      ---实例一---
      var result = jsonQuery(data).target('"c"=12').closest({key: 'a', value: 1}).val();
-     console.log(result) => 结果：[{a: 1, b: {a: 10, b: 11, c: 12, d: 13}}]
+     console.log(result) => 结果：{a: 1, b: {a: 10, b: 11, c: 12, d: 13}}
      ---实例二---
      var result = jsonQuery(data).target('"c"=12').closest({key: 'a', value: 10}).val();
-     console.log(result) => 结果：[{a: 10, b: 11, c: 12, d: 13}]
+     console.log(result) => 结果：{a: 10, b: 11, c: 12, d: 13}
 ```
 
 <a name="data-query-siblings"></a>

@@ -25,7 +25,7 @@ var data = {
 // var findResults = jsonQuery(data).target('1="3"').parents().val();
 
 // 查找指定标志父节点
-// var findResults = jsonQuery(data).target('1="3"').closest({key: 2, value: '5'}).val();
+var findResults = jsonQuery(data).target('2="3"').closest({key: 3, value: '5'}).val();
 
 // 元素替换
 // var findResults = jsonQuery(data).target('1="3","c"="3"').replace({key: 'test', value: 22222}, 'strict').val();
@@ -34,63 +34,12 @@ var data = {
 // var findResults = jsonQuery(data).target('1="3","c"="3"').insert({key: 'test', value: 22222}, 'strict', 'before').val();
 
 // 兄弟节点元素删除
-var findResults = jsonQuery(data).target('2="3","c"="3"').deleteSiblings('strict', 'beforeAll').val();
+// var findResults = jsonQuery(data).target('2="3","c"="3"').deleteSiblings('strict', 'beforeAll').val();
 
 
 console.log('findResults查找结果：', findResults);
 
 
-console.log(jsonQuery.toolUtil.formatIndex({
-	data: [{
-		x_index: 0,
-		y_index: 0,
-		childs: [{
-			x_index: 0,
-			y_index: 1,
-			childs: [{
-				x_index: 0,
-				y_index: 2
-			}, {
-				x_index: 1,
-				y_index: 2
-			}]
-		}, {
-			x_index: 1,
-			y_index: 1,
-			childs: [{
-				x_index: 0,
-				y_index: 2
-			}, {
-				x_index: 1,
-				y_index: 2
-			}]
-		}]
-	}, {
-		x_index: 1,
-		y_index: 0,
-		childs: [{
-			x_index: 0,
-			y_index: 1,
-			childs: [{
-				x_index: 0,
-				y_index: 2
-			}, {
-				x_index: 1,
-				y_index: 2
-			}]
-		}, {
-			x_index: 1,
-			y_index: 1,
-			childs: [{
-				x_index: 0,
-				y_index: 2
-			}, {
-				x_index: 1,
-				y_index: 2
-			}]
-		}]
-	}]
-}, 0));
-
+console.log(jsonQuery.toolUtil);
 
 

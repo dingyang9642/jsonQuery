@@ -1083,7 +1083,7 @@
                     }
                 }
             }
-            this.setResult(totalResults);
+            this.setResult((funcName === '_closest') ? (totalResults[0] || null) : totalResults);
             return this; 
         },
         _parents: function (config) {
@@ -1102,7 +1102,7 @@
 
         // 获取最终返回数据
         val: function () {
-            return this.result || this.data;
+            return this.result;
         },
         // 数据源重设
         setData: function (data) {
