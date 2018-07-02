@@ -5,6 +5,7 @@
 2.0.1  添加formatIndex方法，为数组添加广度／深度索引值<br>
 2.0.2  closest方法返回值类型更改 arr->object<br> 
 2.0.3  jsonQuery.toolUtil更名为jsonQuery.tool；jsonQuery.tool增加getValueWithKey方法<br>
+2.0.4  change some docs<br>
        
 
 ### 使用说明
@@ -288,11 +289,11 @@ modeType(匹配模式)，此处分为2类
 ### getValueWithKey(options)
 ```
 描述：根据key值进行对应value匹配查找
-参数：options = {data: [a:1], key: 'a' }
+参数：options = {data: {a:1}, key: 'a' }
      options.data: 数据源
      options.key: 匹配value对应的查找key值（如果是数组，则直接传数组下标index即可）
 实例：
-     var result = jsonQuery.tool.getValueWithKey({data: [a:1], key: 'a' });
+     var result = jsonQuery.tool.getValueWithKey({data: {a:1}, key: 'a' });
      console.log(result) => [1]
     
 ```
