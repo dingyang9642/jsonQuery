@@ -3,7 +3,9 @@
 ### 版本更新记录
 2.0.0  整体设计模式进行更改<br>
 2.0.1  添加formatIndex方法，为数组添加广度／深度索引值<br>
-2.0.2  closest方法返回值类型更改 arr->object 
+2.0.2  closest方法返回值类型更改 arr->object<br> 
+2.0.3  jsonQuery.toolUtil更名为jsonQuery.tool；jsonQuery.tool增加getValueWithKey方法<br>
+       
 
 ### 使用说明
 commonJs使用：import jsonQuery from 'jsonqueryjs/jsonQuery'<br>
@@ -42,6 +44,7 @@ script引用：\<script src='node_modules/jsonqueryjs/jsonQuery.js'\>\<\/script\
     <li><a href="#data-tool-length" target="_self">getJsonArrLength：获取对象长度</a></li>
     <li><a href="#data-tool-copy" target="_self">deepCopy：对象深度拷贝</a></li>
     <li><a href="#data-tool-formatindex" target="_self">formatIndex：为数组添加广度／深度索引值</a></li>
+    <li><a href="#data-tool-getvalue" target="_self">getValueWithKey：根据key值进行对应value匹配查找</a></li>
     <li><a href="#data-tool-compare" target="_self">compare：两组数据比较，对象不进行地址比较</a></li>
     <li><a href="#data-tool-log" target="_self">logInfo：日志信息控制台输出</a></li>
 </ul>
@@ -225,7 +228,7 @@ modeType(匹配模式)，此处分为2类
 ```
 描述：json对象判断
 实例：
-    var result = jsonQuery.toolUtil.isJson({a: 1});
+    var result = jsonQuery.tool.isJson({a: 1});
     console.log(result) => 结果：true
 ```
 
@@ -234,7 +237,7 @@ modeType(匹配模式)，此处分为2类
 ```
 描述：array对象判断
 实例：
-    var result = jsonQuery.toolUtil.isArray([1]);
+    var result = jsonQuery.tool.isArray([1]);
     console.log(result) => 结果：true
 ```
 
@@ -243,7 +246,7 @@ modeType(匹配模式)，此处分为2类
 ```
 描述：判断是否位于数组中
 实例：
-    var result = jsonQuery.toolUtil.isInArray([1], 1);
+    var result = jsonQuery.tool.isInArray([1], 1);
     console.log(result) => 结果：true  
 ```
 
@@ -253,7 +256,7 @@ modeType(匹配模式)，此处分为2类
 ```
 描述：获取对象长度
 实例：
-    var result = jsonQuery.toolUtil.getJsonArrLength([1]);
+    var result = jsonQuery.tool.getJsonArrLength([1]);
     console.log(result) => 1  
 ```
 
@@ -262,7 +265,7 @@ modeType(匹配模式)，此处分为2类
 ```
 描述：对象深度拷贝
 实例：
-    var result = jsonQuery.toolUtil.deepCopy([1, {a: 1}]);
+    var result = jsonQuery.tool.deepCopy([1, {a: 1}]);
     console.log(result) => 结果：[1, {a: 1}]  
 ```
 
@@ -276,18 +279,30 @@ modeType(匹配模式)，此处分为2类
      options.yKey: 深度索引key值
      yIndex: 深度起始索引，一般为0，固定为0
 实例：
-     var result = jsonQuery.toolUtil.formatIndex({data: [{a: 'a', childs: [{a: 'a'}]}]}, 0);
+     var result = jsonQuery.tool.formatIndex({data: [{a: 'a', childs: [{a: 'a'}]}]}, 0);
      console.log(result) => [{a: 'a', xIndex: 0, yIndex: 0, childs: [{a: 'a', xIndex: 0, yIndex: 1}]}]
     
 ```
 
+<a name="data-tool-getvalue"></a>
+### getValueWithKey(options)
+```
+描述：根据key值进行对应value匹配查找
+参数：options = {data: [a:1], key: 'a' }
+     options.data: 数据源
+     options.key: 匹配value对应的查找key值（如果是数组，则直接传数组下标index即可）
+实例：
+     var result = jsonQuery.tool.getValueWithKey({data: [a:1], key: 'a' });
+     console.log(result) => [1]
+    
+```
 
 <a name="data-tool-compare"></a>
 ### compare(data1, data2)
 ```
 描述：两组数据比较，对象不进行地址比较
 实例：
-    var result = jsonQuery.toolUtil.compare([1, {a: 1}], [1, {a: 1}]);
+    var result = jsonQuery.tool.compare([1, {a: 1}], [1, {a: 1}]);
     console.log(result) => 结果：true  
 ```
 
@@ -296,7 +311,7 @@ modeType(匹配模式)，此处分为2类
 ```
 描述：日志信息控制台输出
 实例：
-    jsonQuery.toolUtil.logInfo('error', 'msg error');
+    jsonQuery.tool.logInfo('error', 'msg error');
 ```
 
 

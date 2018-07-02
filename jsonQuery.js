@@ -120,6 +120,34 @@
             return type;
         },
 
+        // 根据指定的key进行
+        getValueWithKey: function (config) {
+            var json_arr_data = config.data,
+                      nodeKey = config.key;
+            var isArrayData = this.isArray(json_arr_data),
+                 isJsonData = this.isJson(json_arr_data),
+                    results = [];
+            // 首先，进行异常逻辑处理(如果不是json也不是array)
+            if (!isJsonData && !isArrayData) {
+                return results;
+            }
+            var isQueryArray = ((typeof nodeKey) === 'number') ? true : false;
+            // 其次，如果数据是json格式数据{a:1, b:1} || [a, b]
+            for (var key in json_arr_data) {
+                var keyValue = json_arr_data[key];
+                if (this.isJson(keyValue) || this.isArray(keyValue)) {
+                    config.data = keyValue;
+                    results = results.concat(arguments.callee.call(this, config));
+                }
+                key = isArrayData ? key * 1 : key;
+                if (nodeKey === key) {
+                    results.push(keyValue);
+                }
+                continue;
+            }
+            return results;
+        },
+
         /**
          * 数据比较是否相等【此处不进行引用类型地址比较】
          * @Author   dingyang
@@ -1018,6 +1046,11 @@
         _find: function (config) {
             return this.core._queryNodes(config);
         },
+        
+        // 指定位置进行value值查找返回()
+        get: function () {
+
+        },
 
         siblings: function (modeType, queryType) {
             if (!this.rule) {
@@ -1120,7 +1153,7 @@
         return new jsonQuery.fn.init(dataSource);
     };
     jsonQuery.fn = jsonQuery.prototype = _$_; // 核心暴露方法
-    jsonQuery.toolUtil = _$_tool_; // 工具方法暴露对象
+    jsonQuery.tool = _$_tool_; // 工具方法暴露对象
     var init = jsonQuery.fn.init = function (dataSource) {
         this.data = [dataSource];
         return this;
